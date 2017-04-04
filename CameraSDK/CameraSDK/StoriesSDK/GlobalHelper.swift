@@ -14,7 +14,7 @@ typealias StringBlock = (String) -> ()
 typealias BoolBlock = (Bool) -> ()
 typealias PointBlock = (CGPoint) -> ()
 
-func printErr(_ textError: String, logToServer: Bool = false, error: Error? = nil, functionName f: String = #function, file: String = #file) {
+func printErr(_ textError: String, logToServer log: Bool = false, error: Error? = nil, functionName f: String = #function, file: String = #file) {
     var errorLocation = f
 
     if let className = URL(string: file)?.lastPathComponent {
@@ -31,14 +31,14 @@ func printErr(_ textError: String, logToServer: Bool = false, error: Error? = ni
 
 #else
 
-    guard logToServer else {
+    guard log else {
         return
     }
 
     if let error = error {
-        Crashlytics.sharedInstance().recordError(error, withAdditionalUserInfo: ["errorLocation": errorLocation, "textError": textError])
+        logToServer(message: textError, error: error, additionalInfo: ["textError": textError])
     } else {
-        Crashlytics.sharedInstance().recordError(NSError(domain: "Stories.UnknownError", code: 0), withAdditionalUserInfo: ["errorLocation": errorLocation, "textError": textError])
+        logToServer(message: textError, additionalInfo: ["textError": textError])
     }
 
 #endif

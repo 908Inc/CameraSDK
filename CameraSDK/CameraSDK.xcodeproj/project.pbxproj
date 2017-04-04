@@ -6,6 +6,21 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		F5E61BC71E93C48E009E56A4 /* Framework */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = F5E61BC81E93C48E009E56A4 /* Build configuration list for PBXAggregateTarget "Framework" */;
+			buildPhases = (
+				F5E61BCD1E93C4B2009E56A4 /* ShellScript */,
+			);
+			dependencies = (
+				F5E61BCC1E93C4A6009E56A4 /* PBXTargetDependency */,
+			);
+			name = Framework;
+			productName = Framework;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		19971C90DB62776B78A1FE2C /* Pods_CameraSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48DB3BF392856B74C12E46B0 /* Pods_CameraSDK.framework */; };
 		F5E61B481E939AB3009E56A4 /* CameraSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = F5E61B3A1E939AB3009E56A4 /* CameraSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -55,7 +70,25 @@
 		F5E61BBC1E939AE1009E56A4 /* StampViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E61B8D1E939AE1009E56A4 /* StampViewCell.swift */; };
 		F5E61BBD1E939AE1009E56A4 /* StoryChooserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E61B8E1E939AE1009E56A4 /* StoryChooserCell.swift */; };
 		F5E61BC41E93BD62009E56A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F5E61BC31E93BD62009E56A4 /* Assets.xcassets */; };
+		F5E61BE01E93EEC6009E56A4 /* StoryStamp+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E61BD81E93EEC6009E56A4 /* StoryStamp+CoreDataClass.swift */; };
+		F5E61BE11E93EEC6009E56A4 /* StoryStamp+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E61BD91E93EEC6009E56A4 /* StoryStamp+CoreDataProperties.swift */; };
+		F5E61BE21E93EEC6009E56A4 /* Story+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E61BDA1E93EEC6009E56A4 /* Story+CoreDataClass.swift */; };
+		F5E61BE31E93EEC6009E56A4 /* Story+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E61BDB1E93EEC6009E56A4 /* Story+CoreDataProperties.swift */; };
+		F5E61BE41E93EEC6009E56A4 /* Stamp+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E61BDC1E93EEC6009E56A4 /* Stamp+CoreDataClass.swift */; };
+		F5E61BE51E93EEC6009E56A4 /* Stamp+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E61BDD1E93EEC6009E56A4 /* Stamp+CoreDataProperties.swift */; };
+		F5E61BE61E93EEC6009E56A4 /* StampPack+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E61BDE1E93EEC6009E56A4 /* StampPack+CoreDataClass.swift */; };
+		F5E61BE71E93EEC6009E56A4 /* StampPack+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E61BDF1E93EEC6009E56A4 /* StampPack+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F5E61BCB1E93C4A6009E56A4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5E61B2E1E939AB3009E56A4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F5E61B361E939AB3009E56A4;
+			remoteInfo = CameraSDK;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		135906F5101F24BFC9EDE280 /* Pods-CameraSDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CameraSDK.release.xcconfig"; path = "Pods/Target Support Files/Pods-CameraSDK/Pods-CameraSDK.release.xcconfig"; sourceTree = "<group>"; };
@@ -110,6 +143,14 @@
 		F5E61B8D1E939AE1009E56A4 /* StampViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StampViewCell.swift; sourceTree = "<group>"; };
 		F5E61B8E1E939AE1009E56A4 /* StoryChooserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoryChooserCell.swift; sourceTree = "<group>"; };
 		F5E61BC31E93BD62009E56A4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F5E61BD81E93EEC6009E56A4 /* StoryStamp+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "StoryStamp+CoreDataClass.swift"; sourceTree = "<group>"; };
+		F5E61BD91E93EEC6009E56A4 /* StoryStamp+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "StoryStamp+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		F5E61BDA1E93EEC6009E56A4 /* Story+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Story+CoreDataClass.swift"; sourceTree = "<group>"; };
+		F5E61BDB1E93EEC6009E56A4 /* Story+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Story+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		F5E61BDC1E93EEC6009E56A4 /* Stamp+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Stamp+CoreDataClass.swift"; sourceTree = "<group>"; };
+		F5E61BDD1E93EEC6009E56A4 /* Stamp+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Stamp+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		F5E61BDE1E93EEC6009E56A4 /* StampPack+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "StampPack+CoreDataClass.swift"; sourceTree = "<group>"; };
+		F5E61BDF1E93EEC6009E56A4 /* StampPack+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "StampPack+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -215,6 +256,7 @@
 		F5E61B5F1E939AE1009E56A4 /* data */ = {
 			isa = PBXGroup;
 			children = (
+				F5E61BD71E93EEA2009E56A4 /* models */,
 				F5E61B601E939AE1009E56A4 /* CoreDataManager.swift */,
 				F5E61B611E939AE1009E56A4 /* entityServices */,
 				F5E61B671E939AE1009E56A4 /* SDKManager.swift */,
@@ -326,6 +368,21 @@
 			path = stickerChooser;
 			sourceTree = "<group>";
 		};
+		F5E61BD71E93EEA2009E56A4 /* models */ = {
+			isa = PBXGroup;
+			children = (
+				F5E61BD81E93EEC6009E56A4 /* StoryStamp+CoreDataClass.swift */,
+				F5E61BD91E93EEC6009E56A4 /* StoryStamp+CoreDataProperties.swift */,
+				F5E61BDA1E93EEC6009E56A4 /* Story+CoreDataClass.swift */,
+				F5E61BDB1E93EEC6009E56A4 /* Story+CoreDataProperties.swift */,
+				F5E61BDC1E93EEC6009E56A4 /* Stamp+CoreDataClass.swift */,
+				F5E61BDD1E93EEC6009E56A4 /* Stamp+CoreDataProperties.swift */,
+				F5E61BDE1E93EEC6009E56A4 /* StampPack+CoreDataClass.swift */,
+				F5E61BDF1E93EEC6009E56A4 /* StampPack+CoreDataProperties.swift */,
+			);
+			path = models;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -375,6 +432,11 @@
 						DevelopmentTeam = Q5ZE6268FL;
 						ProvisioningStyle = Automatic;
 					};
+					F5E61BC71E93C48E009E56A4 = {
+						CreatedOnToolsVersion = 8.3;
+						DevelopmentTeam = Q5ZE6268FL;
+						ProvisioningStyle = Automatic;
+					};
 				};
 			};
 			buildConfigurationList = F5E61B311E939AB3009E56A4 /* Build configuration list for PBXProject "CameraSDK" */;
@@ -390,6 +452,7 @@
 			projectRoot = "";
 			targets = (
 				F5E61B361E939AB3009E56A4 /* CameraSDK */,
+				F5E61BC71E93C48E009E56A4 /* Framework */,
 			);
 		};
 /* End PBXProject section */
@@ -437,6 +500,19 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CameraSDK/Pods-CameraSDK-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		F5E61BCD1E93C4B2009E56A4 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "REVEAL_ARCHIVE_IN_FINDER=true\n\nFRAMEWORK_NAME=\"${PROJECT_NAME}\"\n\nSIMULATOR_LIBRARY_PATH=\"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${FRAMEWORK_NAME}.framework\"\n\nDEVICE_LIBRARY_PATH=\"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${FRAMEWORK_NAME}.framework\"\n\nUNIVERSAL_LIBRARY_DIR=\"${SRCROOT}/Framework\"\n\nFRAMEWORK=\"${UNIVERSAL_LIBRARY_DIR}/${FRAMEWORK_NAME}.framework\"\n\n\n######################\n# Build Frameworks\n######################\n\n#xcodebuild -project ${PROJECT_NAME}.xcodeproj -sdk iphonesimulator -target ${PROJECT_NAME} -configuration ${CONFIGURATION} clean build CONFIGURATION_BUILD_DIR=${BUILD_DIR}/${CONFIGURATION}-iphonesimulator | echo\n\n#xcodebuild -project ${PROJECT_NAME}.xcodeproj -sdk iphoneos -target ${PROJECT_NAME} -configuration ${CONFIGURATION} clean build CONFIGURATION_BUILD_DIR=${BUILD_DIR}/${CONFIGURATION}-iphoneos | echo\n\n#xcodebuild -target ${PROJECT_NAME} ONLY_ACTIVE_ARCH=NO -configuration ${CONFIGURATION} -sdk iphoneos  BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\" | echo\n\n#xcodebuild -target ${PROJECT_NAME} ONLY_ACTIVE_ARCH=NO -configuration ${CONFIGURATION} -sdk iphonesimulator  BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\" | echo\n\n\n######################\n# Create directory for universal\n######################\n\nrm -rf \"${UNIVERSAL_LIBRARY_DIR}\"\n\nmkdir \"${UNIVERSAL_LIBRARY_DIR}\"\n\nmkdir \"${FRAMEWORK}\"\n\n\n######################\n# Copy files Framework\n######################\n\ncp -r \"${DEVICE_LIBRARY_PATH}/.\" \"${FRAMEWORK}\"\n\n\n######################\n# Make fat universal binary\n######################\n\nlipo \"${SIMULATOR_LIBRARY_PATH}/${FRAMEWORK_NAME}\" \"${DEVICE_LIBRARY_PATH}/${FRAMEWORK_NAME}\" -create -output \"${FRAMEWORK}/${FRAMEWORK_NAME}\" | echo\n\n\n######################\n# On Release, copy the result to desktop folder\n######################\n\nif [ \"${CONFIGURATION}\" == \"Release\" ]; then\nmkdir \"${HOME}/Desktop/${FRAMEWORK_NAME}-${CONFIGURATION}-iphoneuniversal/\"\n#cp -r \"${FRAMEWORK}\" \"${HOME}/Desktop/${FRAMEWORK_NAME}-${CONFIGURATION}-iphoneuniversal/\"\nfi\n\n\n######################\n# If needed, open the Framework folder\n######################\n\nif [ ${REVEAL_ARCHIVE_IN_FINDER} = true ]; then\nif [ \"${CONFIGURATION}\" == \"Release\" ]; then\nopen \"${HOME}/Desktop/${FRAMEWORK_NAME}-${CONFIGURATION}-iphoneuniversal/\"\nelse\nopen \"${UNIVERSAL_LIBRARY_DIR}/\"\nfi\nfi";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -449,12 +525,15 @@
 				F5E61BB51E939AE1009E56A4 /* ImageViewWithOverlay.swift in Sources */,
 				F5E61BA41E939AE1009E56A4 /* String+Convenience.swift in Sources */,
 				F5E61B961E939AE1009E56A4 /* TintedButton.swift in Sources */,
+				F5E61BE31E93EEC6009E56A4 /* Story+CoreDataProperties.swift in Sources */,
 				F5E61B991E939AE1009E56A4 /* StampPackParser.swift in Sources */,
 				F5E61B8F1E939AE1009E56A4 /* GlobalHelper.swift in Sources */,
+				F5E61BE61E93EEC6009E56A4 /* StampPack+CoreDataClass.swift in Sources */,
 				F5E61B971E939AE1009E56A4 /* Utility.swift in Sources */,
 				F5E61BA51E939AE1009E56A4 /* UIAlertController+ShortMessage.swift in Sources */,
 				F5E61BB01E939AE1009E56A4 /* CaptureButtonView.swift in Sources */,
 				F5E61BA21E939AE1009E56A4 /* Array+RemoveObject.swift in Sources */,
+				F5E61BE41E93EEC6009E56A4 /* Stamp+CoreDataClass.swift in Sources */,
 				F5E61BB21E939AE1009E56A4 /* CapturePhotoViewController.swift in Sources */,
 				F5E61BB41E939AE1009E56A4 /* ImageEditorViewController.swift in Sources */,
 				F5E61B941E939AE1009E56A4 /* Geometry.swift in Sources */,
@@ -465,6 +544,7 @@
 				F5E61B951E939AE1009E56A4 /* StampUtility.swift in Sources */,
 				F5E61BAF1E939AE1009E56A4 /* Positioner.swift in Sources */,
 				F5E61BAB1E939AE1009E56A4 /* UIViewController+StoryboardInstantiation.swift in Sources */,
+				F5E61BE51E93EEC6009E56A4 /* Stamp+CoreDataProperties.swift in Sources */,
 				F5E61BA71E939AE1009E56A4 /* UIImage+Orientation.swift in Sources */,
 				F5E61BA31E939AE1009E56A4 /* CIFaceFeature+ImageOrientation.swift in Sources */,
 				F5E61BB31E939AE1009E56A4 /* ImageEditorView.swift in Sources */,
@@ -476,15 +556,19 @@
 				F5E61BB91E939AE1009E56A4 /* ImageCollectionViewCell.swift in Sources */,
 				F5E61BAD1E939AE1009E56A4 /* FaceObject.swift in Sources */,
 				F5E61B921E939AE1009E56A4 /* StampsModel.xcdatamodeld in Sources */,
+				F5E61BE71E93EEC6009E56A4 /* StampPack+CoreDataProperties.swift in Sources */,
 				F5E61BA91E939AE1009E56A4 /* UIView+CordAdditions.swift in Sources */,
 				F5E61BA61E939AE1009E56A4 /* UIAlertController+UserNotifications.swift in Sources */,
 				F5E61BBA1E939AE1009E56A4 /* StampChooserDataProvider.swift in Sources */,
 				F5E61BB61E939AE1009E56A4 /* StampView.swift in Sources */,
+				F5E61BE01E93EEC6009E56A4 /* StoryStamp+CoreDataClass.swift in Sources */,
+				F5E61BE11E93EEC6009E56A4 /* StoryStamp+CoreDataProperties.swift in Sources */,
 				F5E61BA81E939AE1009E56A4 /* UIView+Convenience.swift in Sources */,
 				F5E61BA01E939AE1009E56A4 /* URLRequest+DefaultRequest.swift in Sources */,
 				F5E61BAC1E939AE1009E56A4 /* Face.swift in Sources */,
 				F5E61BAE1E939AE1009E56A4 /* ImageDetector.swift in Sources */,
 				F5E61BA11E939AE1009E56A4 /* WebserviceManager.swift in Sources */,
+				F5E61BE21E93EEC6009E56A4 /* Story+CoreDataClass.swift in Sources */,
 				F5E61B9A1E939AE1009E56A4 /* StampPointsContainer.swift in Sources */,
 				F5E61B9F1E939AE1009E56A4 /* ImageSourceContainer.swift in Sources */,
 				F5E61B9E1E939AE1009E56A4 /* SessionManager.swift in Sources */,
@@ -492,6 +576,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F5E61BCC1E93C4A6009E56A4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F5E61B361E939AB3009E56A4 /* CameraSDK */;
+			targetProxy = F5E61BCB1E93C4A6009E56A4 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		F5E61B491E939AB3009E56A4 /* Debug */ = {
@@ -637,6 +729,24 @@
 			};
 			name = Release;
 		};
+		F5E61BC91E93C48E009E56A4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = Q5ZE6268FL;
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		F5E61BCA1E93C48E009E56A4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = Q5ZE6268FL;
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -654,6 +764,15 @@
 			buildConfigurations = (
 				F5E61B4C1E939AB3009E56A4 /* Debug */,
 				F5E61B4D1E939AB3009E56A4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F5E61BC81E93C48E009E56A4 /* Build configuration list for PBXAggregateTarget "Framework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F5E61BC91E93C48E009E56A4 /* Debug */,
+				F5E61BCA1E93C48E009E56A4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

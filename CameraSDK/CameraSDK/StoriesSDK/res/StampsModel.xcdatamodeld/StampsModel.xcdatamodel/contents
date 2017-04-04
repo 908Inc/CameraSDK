@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16D32" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="Stamp" representedClassName=".Stamp" syncable="YES" codeGenerationType="class">
+    <entity name="Stamp" representedClassName=".Stamp" syncable="YES">
         <attribute name="id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="imageUrl" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="orderNumber" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="pack" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="StampPack" inverseName="stamps" inverseEntity="StampPack" syncable="YES"/>
     </entity>
-    <entity name="StampPack" representedClassName=".StampPack" syncable="YES" codeGenerationType="class">
+    <entity name="StampPack" representedClassName=".StampPack" syncable="YES">
         <attribute name="id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="orderNumber" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
@@ -15,14 +15,14 @@
         <attribute name="updatedAt" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="stamps" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Stamp" inverseName="pack" inverseEntity="Stamp" syncable="YES"/>
     </entity>
-    <entity name="Story" representedClassName=".Story" syncable="YES" codeGenerationType="class">
+    <entity name="Story" representedClassName=".Story" syncable="YES">
         <attribute name="dataHash" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="iconUrl" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="id" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
         <attribute name="orderNumber" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="stamps" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="StoryStamp" inverseName="story" inverseEntity="StoryStamp" syncable="YES"/>
     </entity>
-    <entity name="StoryStamp" representedClassName="StoryStamp" syncable="YES" codeGenerationType="class">
+    <entity name="StoryStamp" representedClassName="StoryStamp" syncable="YES">
         <attribute name="id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="imageUrl" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="orderNumber" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
@@ -34,9 +34,9 @@
         <relationship name="story" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Story" inverseName="stamps" inverseEntity="Story" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Stamp" positionX="-282" positionY="201" width="128" height="118"/>
-        <element name="StampPack" positionX="-513" positionY="186" width="128" height="133"/>
-        <element name="Story" positionX="-513" positionY="498" width="128" height="118"/>
-        <element name="StoryStamp" positionX="-281" positionY="438" width="128" height="178"/>
+        <element name="Stamp" positionX="-282" positionY="201" width="128" height="120"/>
+        <element name="StampPack" positionX="-513" positionY="186" width="128" height="135"/>
+        <element name="Story" positionX="-513" positionY="498" width="128" height="120"/>
+        <element name="StoryStamp" positionX="-281" positionY="438" width="128" height="180"/>
     </elements>
 </model>
