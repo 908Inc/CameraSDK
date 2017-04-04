@@ -1,0 +1,6 @@
+framework module Pods_CameraSDK {
+  umbrella header "Pods-CameraSDK-umbrella.h"
+
+  export *
+  module * { export * }
+}

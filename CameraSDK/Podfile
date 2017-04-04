@@ -1,0 +1,16 @@
+platform :ios, "8.0"
+
+def pods
+  inhibit_all_warnings!
+  use_frameworks!
+
+  pod 'SAMKeychain'
+  pod 'MD5Digest'
+
+  pod 'SDWebImage'
+  pod 'MBProgressHUD'
+end
+
+target ‘CameraSDK’ do
+  pods
+end

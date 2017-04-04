@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CameraSDK
 
 class ViewController: UIViewController {
 
@@ -14,12 +15,12 @@ class ViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        
-        
     }
 
     override func viewDidAppear(_ animated: Bool) {
-        show(ImageEditorViewController.storyboardController(), sender: nil)
+        super.viewDidAppear(true)
+        
+        show(StoryBuilderViewController.storyboardController(), sender: nil)
     }
     
     override func didReceiveMemoryWarning() {
