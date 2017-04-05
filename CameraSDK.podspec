@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "CameraSDK"
-  s.version      = "0.0.1"
+  s.version      = "0.0.2"
   s.summary      = "An easy to use lib for integrating Stories into your app"
 
   s.description  = <<-DESC
@@ -17,8 +17,8 @@ Pod::Spec.new do |s|
   s.platform     = :ios, '8.0'
 
   s.source = { :git => "https://github.com/908Inc/CameraSDK.git", :tag => "0.0.1" }
-  s.source_files  = "src/*.*"
-  s.resources = "res/*.*"
+  s.source_files  = "src/*"
+  s.resources = "res/*"
   
 
   s.dependency "SAMKeychain"
