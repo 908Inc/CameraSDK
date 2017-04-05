@@ -17,8 +17,8 @@ Pod::Spec.new do |s|
   s.platform     = :ios, '8.0'
 
   s.source = { :git => "https://github.com/908Inc/CameraSDK.git", :tag => "0.0.1" }
-  s.source_files  = "CameraSDK/**/*.{swift}"
-  s.resources = "CameraSDK/CameraSDK/StoriesSDK/res/*.*"
+  s.source_files  = "src/*.*"
+  s.resources = "res/*.*"
   
 
   s.dependency "SAMKeychain"

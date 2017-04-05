@@ -1,6 +1,0 @@
-framework module CameraSDK {
-  umbrella header "CameraSDK-umbrella.h"
-
-  export *
-  module * { export * }
-}
