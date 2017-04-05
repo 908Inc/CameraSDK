@@ -10,7 +10,6 @@ import UIKit
 import CoreData
 
 class CoreDataManager: NSObject {
-//    let backgroundContext: NSManagedObjectContext
     let mainContext: NSManagedObjectContext
 
     private let managedObjectModel: NSManagedObjectModel
@@ -18,10 +17,8 @@ class CoreDataManager: NSObject {
     private let persistentStoreCoordinator: NSPersistentStoreCoordinator
 
     override init() {
-        guard let frameworkBundle = Bundle(identifier: "com.908.CameraSDK") else {
-            fatalError("can't access frameworkBundle")
-        }
-        
+        let frameworkBundle = Bundle(for: CoreDataManager.self)
+
         let urlForDataModel = frameworkBundle.url(forResource: "StampsModel", withExtension: "momd")!
 
         managedObjectModel = NSManagedObjectModel(contentsOf: urlForDataModel)!

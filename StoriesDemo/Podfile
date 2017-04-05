@@ -9,8 +9,9 @@ def pods
 
   pod 'SDWebImage'
   pod 'MBProgressHUD'
+  pod 'CameraSDK', :path => '~/Work/908/CameraSDK/CameraSDK'
 end
 
-target 'StoriesDemo’ do
+target 'StoriesDemo' do
   pods
 end

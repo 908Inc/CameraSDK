@@ -1,4 +1,9 @@
 PODS:
+  - CameraSDK (0.0.1):
+    - MBProgressHUD
+    - MD5Digest
+    - SAMKeychain
+    - SDWebImage
   - MBProgressHUD (1.0.0)
   - MD5Digest (1.1.0)
   - SAMKeychain (1.5.2)
@@ -7,17 +12,23 @@ PODS:
   - SDWebImage/Core (4.0.0)
 
 DEPENDENCIES:
+  - CameraSDK (from `~/Work/908/CameraSDK/CameraSDK`)
   - MBProgressHUD
   - MD5Digest
   - SAMKeychain
   - SDWebImage
 
+EXTERNAL SOURCES:
+  CameraSDK:
+    :path: "~/Work/908/CameraSDK/CameraSDK"
+
 SPEC CHECKSUMS:
+  CameraSDK: efbcd0aaa91c6f7c99eb9ea8a77ea2b7a8d98bc8
   MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
   MD5Digest: fea371215507cfcdc3c9633d02cffc7fd075ebc3
   SAMKeychain: 1865333198217411f35327e8da61b43de79b635b
   SDWebImage: 76a6348bdc74eb5a55dd08a091ef298e56b55e41
 
-PODFILE CHECKSUM: 0c5928fa0ddbe84506815dc9975a26da1a3a1435
+PODFILE CHECKSUM: b631730932be64de64df6204ac9b1a0625537790
 
 COCOAPODS: 1.2.0

@@ -10,8 +10,7 @@ import UIKit
 
 public extension UIViewController {
     public static func storyboardController() -> Self {
-        let frameworkBundle = Bundle(identifier: "com.908.CameraSDK")
-        let storyboard = UIStoryboard(name: "Stories", bundle: frameworkBundle)
+        let storyboard = UIStoryboard(name: "Stories", bundle: Bundle(for: self))
         
         return instantiateFromStoryboardHelper(storyboard: storyboard)
     }
