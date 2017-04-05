@@ -2,6 +2,7 @@
   "name": "CameraSDK",
   "version": "0.0.1",
   "summary": "An easy to use lib for integrating Stories into your app",
+  "description": "Fast and convenient way of adding cool Stories into your app. See screenshots for more detail",
   "homepage": "https://github.com/908Inc/CameraSDK",
   "license": {
     "type": "Apache License, Version 2.0",
@@ -14,11 +15,11 @@
     "ios": "8.0"
   },
   "source": {
-    "git": "file:///Users/vlad/Work/908/CameraSDK/CameraSDK",
+    "git": "https://github.com/908Inc/CameraSDK.git",
     "tag": "0.0.1"
   },
   "source_files": "CameraSDK/**/*.{swift}",
-  "resources": "CameraSDK/StoriesSDK/res/*.*",
+  "resources": "CameraSDK/CameraSDK/StoriesSDK/res/*.*",
   "dependencies": {
     "SAMKeychain": [
 

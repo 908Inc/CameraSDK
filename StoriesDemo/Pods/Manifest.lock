@@ -23,7 +23,7 @@ EXTERNAL SOURCES:
     :path: "~/Work/908/CameraSDK/CameraSDK"
 
 SPEC CHECKSUMS:
-  CameraSDK: efbcd0aaa91c6f7c99eb9ea8a77ea2b7a8d98bc8
+  CameraSDK: f641a8c8e28b40cbe70362e3dab25593a120f2e0
   MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
   MD5Digest: fea371215507cfcdc3c9633d02cffc7fd075ebc3
   SAMKeychain: 1865333198217411f35327e8da61b43de79b635b

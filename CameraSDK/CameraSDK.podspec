@@ -9,7 +9,6 @@ Pod::Spec.new do |s|
                    DESC
 
   s.homepage     = "https://github.com/908Inc/CameraSDK"
-  # s.screenshots  = "www.example.com/screenshots_1.gif", "www.example.com/screenshots_2.gif"
 
   s.license      = { :type => "Apache License, Version 2.0", :file => "LICENSE" }
 
@@ -18,10 +17,9 @@ Pod::Spec.new do |s|
   s.platform     = :ios, '8.0'
 
   s.source = { :git => "https://github.com/908Inc/CameraSDK.git", :tag => "0.0.1" }
-
   s.source_files  = "CameraSDK/**/*.{swift}"
-
   s.resources = "CameraSDK/CameraSDK/StoriesSDK/res/*.*"
+  
 
   s.dependency "SAMKeychain"
   s.dependency "MD5Digest"
