@@ -16,8 +16,8 @@ Pod::Spec.new do |s|
 
   s.platform     = :ios, '8.0'
 
-  s.source = { :git => "https://github.com/908Inc/CameraSDK.git", :tag => "0.0.1" }
-  s.source_files  = "src/*"
+  s.source = { :git => "https://github.com/908Inc/CameraSDK.git", :tag => s.version }
+  s.source_files  = "src/**/*.swift"
   s.resources = "res/*"
   
 

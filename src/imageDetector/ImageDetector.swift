@@ -27,15 +27,15 @@ class ImageDetector: NSObject {
 
     static let detector = CIDetector(ofType: CIDetectorTypeFace, context: nil, options: [CIDetectorAccuracy: CIDetectorAccuracyHigh])
 
-    static func getEmotion(from ciImage: CIImage) -> Emotion {
+    static func getEmotion(from ciImage: CIImage) -> Emotion? {
         guard let detector = detector else {
-            return Emotion.noEmotion
+            return nil
         }
 
         let features = detector.features(in: ciImage, options: [CIDetectorSmile: true, CIDetectorEyeBlink: true, CIDetectorImageOrientation: 5])
 
         guard features.count > 0 else {
-            return Emotion.noEmotion
+            return nil
         }
 
         for feature in features {
@@ -46,7 +46,7 @@ class ImageDetector: NSObject {
             return Emotion(leftWink: faceFeature.leftEyeClosed, rightWink: faceFeature.rightEyeClosed, smile: faceFeature.hasSmile)
         }
 
-        return Emotion.noEmotion
+        return nil
     }
 
     static func getCords(from image: CIImage, for rect: CGRect) throws -> [Face]? {

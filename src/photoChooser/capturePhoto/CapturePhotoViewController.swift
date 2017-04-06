@@ -47,8 +47,10 @@ class CapturePhotoViewController: UIViewController {
         }
 
         capturePhotoHelper.capturePhotoAsynchronously { capturedPhoto, error in
-            guard let capturedPhoto = capturedPhoto else {
-                printErr("no photo captured")
+            guard error == nil, let capturedPhoto = capturedPhoto else {
+                printErr("can't make photo", error: error)
+
+                UIAlertController.show(from: self, for: UIAlertController.UserAlert.lCantMakePhoto)
 
                 return
             }
@@ -81,13 +83,13 @@ extension CapturePhotoViewController: UIImagePickerControllerDelegate, UINavigat
         }
 
         guard let chosenImage = info[UIImagePickerControllerOriginalImage] as? UIImage else {
-            UIAlertController.show(from: self, for: UserAlert.lBrokenImage, logMessage: "unexpected behavior; selected image isn't UIImage")
+            UIAlertController.show(from: self, for: UIAlertController.UserAlert.lBrokenImage, logMessage: "unexpected behavior; selected image isn't UIImage")
 
             return
         }
 
         guard let resultPhoto = chosenImage.fixOrientation() else {
-            UIAlertController.show(from: self, for: UserAlert.lBrokenImage, logMessage: "can't access photo after fixing orientation")
+            UIAlertController.show(from: self, for: UIAlertController.UserAlert.lBrokenImage, logMessage: "can't access photo after fixing orientation")
 
             return
         }

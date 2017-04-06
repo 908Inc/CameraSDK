@@ -63,7 +63,7 @@ public class StoryBuilderViewController: UIViewController {
 
         DispatchQueue.global().async {
             guard let ciImage = CIImage(image: image) else {
-                UIAlertController.show(from: self, for: UserAlert.lIncorrectImage)
+                UIAlertController.show(from: self, for: UIAlertController.UserAlert.lIncorrectImage)
 
                 return
             }
@@ -128,7 +128,7 @@ public class StoryBuilderViewController: UIViewController {
 
             present(UIActivityViewController(activityItems: [image], applicationActivities: nil), animated: true)
         } catch {
-            UIAlertController.show(from: self, for: UserAlert.lIncorrectImage)
+            UIAlertController.show(from: self, for: UIAlertController.UserAlert.lIncorrectImage)
         }
     }
 
@@ -280,7 +280,7 @@ public class StoryBuilderViewController: UIViewController {
 
                     self.storyPickerView.changePresentation(.shown, animated: true)
                 } else {
-                    UIAlertController.show(from: self, for: UserAlert.lNoFaceFound)
+                    UIAlertController.show(from: self, for: UIAlertController.UserAlert.lNoFaceFound)
 
                     self.storyPickerView.changePresentation(.locked, animated: true)
                 }

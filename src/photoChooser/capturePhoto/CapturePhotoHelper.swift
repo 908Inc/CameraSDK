@@ -14,6 +14,12 @@ protocol CapturePhotoHelperDelegate: class {
 }
 
 class CapturePhotoHelper: NSObject {
+
+    enum CapturePhotoHelperError: String, Error {
+        case cantAccessCaptureConnection = "captureConnection is nil. Do you try to get photo in simulator?"
+    }
+
+
     weak var delegate: CapturePhotoHelperDelegate?
     let captureSession = AVCaptureSession()
 
@@ -27,7 +33,6 @@ class CapturePhotoHelper: NSObject {
         output.setSampleBufferDelegate(self, queue: sampleQueue)
 
         let metaOutput = AVCaptureMetadataOutput()
-        metaOutput.setMetadataObjectsDelegate(self, queue: faceQueue)
 
         if captureSession.canAddOutput(output) {
             captureSession.addOutput(output)
@@ -39,17 +44,23 @@ class CapturePhotoHelper: NSObject {
 
         setCaptureDeviceForPosition(.front)
 
-        metaOutput.metadataObjectTypes = [AVMetadataObjectTypeFace]
+        if (metaOutput.availableMetadataObjectTypes.contains { $0 as? String == AVMetadataObjectTypeFace }) {
+            metaOutput.metadataObjectTypes = [AVMetadataObjectTypeFace]
+        }
     }
 
     func capturePhotoAsynchronously(_ handler: ((UIImage?, Error?) -> Swift.Void)!) {
+        guard let captureConnection = captureConnection else {
+            handler(nil, CapturePhotoHelperError.cantAccessCaptureConnection)
+
+            return
+        }
+
         stillImageOutput.captureStillImageAsynchronously(from: captureConnection) { sampleBuffer, error in
             var resultImage: UIImage? = nil
             var error: Error? = error
 
-            defer {
-                handler(resultImage, error)
-            }
+            defer { handler(resultImage, error) }
 
             guard let buffer = sampleBuffer else {
                 printErr("sampleBuffer is nil", error: error)
@@ -102,88 +113,69 @@ class CapturePhotoHelper: NSObject {
     }
 
     func setCaptureDeviceForPosition(_ position: AVCaptureDevicePosition) {
-        captureSession.beginConfiguration()
+        guard let devices = AVCaptureDevice.devices() else {
+            printErr("no devices found")
 
-        // Loop through all the capture devices on this phone
-        if let devices = AVCaptureDevice.devices() {
-            for device in devices {
-                if let captureDevice = device as? AVCaptureDevice {
-                    // Make sure this particular device supports video
-                    if (captureDevice.hasMediaType(AVMediaTypeVideo)) {
-                        // Finally check the position and confirm we've got the back camera
-                        if (captureDevice.position == position) {
-                            self.captureDevice = captureDevice
-
-                            break
-                        }
-                    }
-                }
-            }
+            return
         }
 
-        captureSession.removeInput(deviceInput)
-        captureSession.commitConfiguration()
-        beginSession()
-    }
+        guard let newCaptureDevice = devices.first(where: { device in
+            guard let captureDevice = device as? AVCaptureDevice else { return false }
 
-    private func beginSession() {
+            return captureDevice.hasMediaType(AVMediaTypeVideo) && captureDevice.position == position
+        }) as? AVCaptureDevice else {
+            printErr("no sufficient devices found")
+
+            return
+        }
+
         do {
-            let deviceInput = try AVCaptureDeviceInput(device: captureDevice)
-            captureSession.addInput(deviceInput)
+            let newDeviceInput = try AVCaptureDeviceInput(device: newCaptureDevice)
 
-            for connection in stillImageOutput.connections {
-                if let connection = connection as? AVCaptureConnection {
-                    connection.videoOrientation = .portrait
+            captureSession.beginConfiguration()
+            captureSession.removeInput(deviceInput)
+            captureSession.addInput(newDeviceInput)
 
-                    captureConnection = connection
-                }
+            if let connection = (stillImageOutput.connections.first { $0 is AVCaptureConnection }) as? AVCaptureConnection {
+                connection.videoOrientation = .portrait
+                captureConnection = connection
             }
 
-            captureSession.startRunning()
-            self.deviceInput = deviceInput
+            captureSession.commitConfiguration()
+
+            captureSession.startRunning() //??
+
+            captureDevice = newCaptureDevice
+            deviceInput = newDeviceInput
         } catch {
             printErr("can't start session", error: error)
         }
     }
 
-    fileprivate var currentMetadata = [Any]()
-
     private var deviceInput: AVCaptureDeviceInput?
     private var captureConnection: AVCaptureConnection?
     private (set) var captureDevice: AVCaptureDevice?
     private let stillImageOutput = AVCaptureStillImageOutput()
-    private let faceQueue = DispatchQueue(label: "com.zweigraf.DisplayLiveSamples.faceQueue", attributes: [])
     private let sampleQueue = DispatchQueue(label: "com.zweigraf.DisplayLiveSamples.sampleQueue", attributes: [])
 }
 
 
 extension CapturePhotoHelper: AVCaptureVideoDataOutputSampleBufferDelegate {
     func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!) {
-        if !currentMetadata.isEmpty {
-            guard let cvImage = CMSampleBufferGetImageBuffer(sampleBuffer) else {
-                printErr("can't get imageBuffer")
+        guard let cvImage = CMSampleBufferGetImageBuffer(sampleBuffer) else {
+            printErr("can't get imageBuffer")
 
-                return
-            }
-
-            if #available(iOS 9.0, *) {
-                let ciImage = CIImage(cvImageBuffer: cvImage)
-
-                let emotion = ImageDetector.getEmotion(from: ciImage)
-
-                delegate?.faceObjectsAppeared(emotion)
-            } else {
-                // TODO: add iOS8
-            }
-        } else {
-            delegate?.faceObjectsAppeared(nil)
+            return
         }
-    }
-}
 
+        if #available(iOS 9.0, *) {
+            let ciImage = CIImage(cvImageBuffer: cvImage)
 
-extension CapturePhotoHelper: AVCaptureMetadataOutputObjectsDelegate {
-    public func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [Any]!, from connection: AVCaptureConnection!) {
-        currentMetadata = metadataObjects
+            let emotion = ImageDetector.getEmotion(from: ciImage)
+
+            delegate?.faceObjectsAppeared(emotion)
+        } else {
+            // TODO: add iOS8
+        }
     }
 }
