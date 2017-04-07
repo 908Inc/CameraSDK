@@ -45,8 +45,15 @@ func shareImage(_ image: UIImage) {
     storyBuilder.present(UIActivityViewController(activityItems: [image], applicationActivities: nil), animated: true)
 }
 ```
-## License
+
+# API
+
+This SDK uses Stickerpipe API. You can find its documentation [here](http://docs.stickerpipe.com)
+
+# Content
+
+List of Stamp packs and Stories is customizable. Contact us for more information at i@stickerpipe.com
+
 ## License
 
-Stickerpipe is available under the Apache 2 license. See the [LICENSE](LICENSE) file for more information.
-Stickerpipe is available under the Apache 2 license. See the [LICENSE](LICENSE) file for more information.
+CameraSDK is available under the Apache 2 license. See the [LICENSE](LICENSE) file for more information.
