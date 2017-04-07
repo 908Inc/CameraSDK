@@ -14,7 +14,7 @@ class AnalyticWebservice: NSObject {
         self.urlSession = urlSession
     }
 
-    func sendAnalytics(withDicts dicts: [[String: AnyHashable]], responseHandler: ((Error?)->())? = nil) {
+    func sendAnalytics(withDicts dicts: [[String: AnyHashable]], responseHandler: (([String: AnyHashable]?, Error?)->())? = nil) {
         do {
             let data = try JSONSerialization.data(withJSONObject: dicts)
 
@@ -26,28 +26,28 @@ class AnalyticWebservice: NSObject {
             urlSession.dataTask(with: request) { data, response, error in
                 do {
                     guard error == nil else {
-                        responseHandler?(error)
+                        responseHandler?(nil, error)
 
                         return
                     }
                     guard let data = data else {
-                        responseHandler?(error ?? WebservicesError.noData)
+                        responseHandler?(nil, error ?? WebservicesError.noData)
 
                         return
                     }
-                    guard let json = try JSONSerialization.jsonObject(with: data) as? NSDictionary else {
-                        responseHandler?(error ?? WebservicesError.unknownFormat)
+                    guard let json = try JSONSerialization.jsonObject(with: data) as? [String: AnyHashable] else {
+                        responseHandler?(nil, error ?? WebservicesError.unknownFormat)
 
                         return
                     }
 
-                    responseHandler?(nil)
+                    responseHandler?(json, nil)
                 } catch {
-                    responseHandler?(error)
+                    responseHandler?(nil, error)
                 }
             }.resume()
         } catch {
-            responseHandler?(error)
+            responseHandler?(nil, error)
         }
     }
 

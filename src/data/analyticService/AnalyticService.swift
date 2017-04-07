@@ -80,7 +80,7 @@ class AnalyticService: NSObject {
             
             let analyticsDicts = allAnalytics.map { $0.dictionaryRepresentation() }
             
-            self.webservice.sendAnalytics(withDicts: analyticsDicts) { error in
+            self.webservice.sendAnalytics(withDicts: analyticsDicts) { response, error in
                 defer { self.semaphore.signal() }
 
                 guard error == nil else {
