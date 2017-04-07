@@ -15,6 +15,7 @@ extension UIAlertController {
         static let lBrokenImage = Notification(title: "Ooops..", message: "Something wrong with this image. Try another one")
         static let lNoFaceFound = Notification(title: "Ooops..", message: "We can't find your face on this image. Try another one")
         static let lCantMakePhoto = Notification(title: "Sorry", message: "Looks like we can't make a photo 😕")
+        static let lNoInternet = Notification(title: "No internet 😐", message: "Connect to internet and we will get new stories for you!")
 
         struct Notification {
             fileprivate let title: String

@@ -39,14 +39,23 @@ public class StoryBuilderViewController: UIViewController {
 
         stickersService.updateStories { error in
             DispatchQueue.main.async {
-                guard error == nil else {
-                    printErr("error during updating stories", logToServer: true, error: error)
-
-                    return
+                defer {
+                    if let activityIndicator = activityIndicator {
+                        activityIndicator.hide(animated: true)
+                    }
                 }
 
-                if let activityIndicator = activityIndicator {
-                    activityIndicator.hide(animated: true)
+                guard error == nil else {
+                    switch (error! as NSError).code {
+                    case NSURLErrorNotConnectedToInternet:
+                        if self.animatedStories?.count ?? 0 == 0 {
+                            UIAlertController.show(from: self, for: UIAlertController.UserAlert.lNoInternet)
+                        }
+                    default:
+                        printErr("error during updating stories", logToServer: true, error: error)
+                    }
+
+                    return
                 }
 
                 if self.animatedStories?.count ?? 0 == 0 {
@@ -56,7 +65,15 @@ public class StoryBuilderViewController: UIViewController {
         }
 
         stickersService.updateStamps { error in
-            // TODO: add error processing
+            guard error == nil else {
+                switch (error! as NSError).code {
+                case NSURLErrorNotConnectedToInternet:()
+                default:
+                    printErr("error during updating stories", logToServer: true, error: error)
+                }
+
+                return
+            }
         }
     }
 
@@ -136,6 +153,10 @@ public class StoryBuilderViewController: UIViewController {
                 printErr("set delegate to capture result image in -shareImage method")
 
                 return
+            }
+
+            if let animatedStories = animatedStories, storyIdx >= 0, animatedStories.count < storyIdx {
+                SessionManager.shared.analyticService.storyShared(storyId: animatedStories[storyIdx].story.id)
             }
 
             delegate.shareImage(image)
@@ -241,7 +262,7 @@ public class StoryBuilderViewController: UIViewController {
             return
         }
 
-        let sortedStamps = stamps.sorted{ $0.orderNumber < $1.orderNumber }
+        let sortedStamps = stamps.sorted { $0.orderNumber < $1.orderNumber }
 
         func addRecursively(forStampIdx idx: Int, storyIdx _storyIdx: Int, completion: (() -> ())? = nil) {
             if idx < sortedStamps.count, self.storyIdx == _storyIdx {

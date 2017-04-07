@@ -18,6 +18,9 @@ Pod::Spec.new do |s|
 
   s.source = { :git => "https://github.com/908Inc/CameraSDK.git", :tag => s.version }
   s.source_files  = "src/**/*.swift"
+  s.pod_target_xcconfig = {
+    'OTHER_SWIFT_FLAGS[config=Debug]' => '-DDEBUG',
+  }
   s.resources = "res/*"
   
 

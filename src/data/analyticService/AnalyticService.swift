@@ -9,6 +9,14 @@
 import UIKit
 import CoreData
 
+// prevents any statistic to be sent during debug
+class DebugAnalyticService: AnalyticService {
+    override func stampSelected(stampId: Int32) {}
+    override func storySelected(storyId: Int32) {}
+    override func storyShared(storyId: Int32) {}
+    override func sendAnalytics() {}
+}
+
 class AnalyticService: NSObject {
     let context: NSManagedObjectContext
     let webservice: AnalyticWebservice
@@ -73,6 +81,8 @@ class AnalyticService: NSObject {
             let analyticsDicts = allAnalytics.map { $0.dictionaryRepresentation() }
             
             self.webservice.sendAnalytics(withDicts: analyticsDicts) { error in
+                defer { self.semaphore.signal() }
+
                 guard error == nil else {
                     printErr("can't send statistic", error: error)
                     
@@ -90,8 +100,6 @@ class AnalyticService: NSObject {
                         printErr("can't delete an event", error: error)
                     }
                 }
-                
-                self.semaphore.signal()
             }
         }
     }

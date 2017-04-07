@@ -21,7 +21,12 @@ class SessionManager: NSObject {
         SDImageCache.shared().config.shouldCacheImagesInMemory = false
 
         // move here, because it uses coreDataManager during default init
+        #if DEBUG
+        analyticService = DebugAnalyticService(moc: coreDataManager.mainContext)
+        #else
         analyticService = AnalyticService(moc: coreDataManager.mainContext)
+        #endif
+
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidEnterBackground), name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
     }
 

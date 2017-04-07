@@ -48,6 +48,7 @@ func logToServer(message: String, error: Error = NSError(domain: "Stories.Unknow
     var additionalInfo = additionalInfo
     additionalInfo["textError"] = message
 
-    // provide your oun mechanism to log errors
+    // TODO:
+    // provide your own mechanism to log errors
 }
 
