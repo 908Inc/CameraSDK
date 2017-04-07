@@ -10,7 +10,13 @@ import UIKit
 import Messages
 import MBProgressHUD
 
+public protocol StoryBuilderViewControllerDelegate: class {
+    func shareImage(_ image: UIImage)
+}
+
 public class StoryBuilderViewController: UIViewController {
+    public weak var delegate: StoryBuilderViewControllerDelegate?
+
     override public func viewDidLoad() {
         super.viewDidLoad()
 
@@ -126,7 +132,13 @@ public class StoryBuilderViewController: UIViewController {
         do {
             let image = try imageEditor.getResultImage().image
 
-            present(UIActivityViewController(activityItems: [image], applicationActivities: nil), animated: true)
+            guard let delegate = delegate else {
+                printErr("set delegate to capture result image in -shareImage method")
+
+                return
+            }
+
+            delegate.shareImage(image)
         } catch {
             UIAlertController.show(from: self, for: UIAlertController.UserAlert.lIncorrectImage)
         }
