@@ -50,7 +50,7 @@ public class StoryBuilderViewController: UIViewController {
         }
 
         stickersService.updateStamps { error in
-
+            // TODO: add error processing
         }
     }
 
@@ -258,7 +258,7 @@ public class StoryBuilderViewController: UIViewController {
         }
     }
 
-    private let stickersService = StickersEntityService()
+    private let stickersService = StoriesEntityService()
 
     fileprivate var removeMode = false {
         didSet {
@@ -355,11 +355,15 @@ extension StoryBuilderViewController: StampInteractionDelegate {
 
         imageEditor.stampsLayerView.addStamp(stamp, forRect: CGRect(origin: point, size: frame.size))
 
+        SessionManager.shared.analyticService.stampSelected(stampId: stamp.id)
+
         fadeStickerView()
     }
 
     func stampSelected(_ stamp: Stamp) {
         hideStickerView()
+
+        SessionManager.shared.analyticService.stampSelected(stampId: stamp.id)
 
         imageEditor.stampsLayerView.addStamp(stamp)
     }

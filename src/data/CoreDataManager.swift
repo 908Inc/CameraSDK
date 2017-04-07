@@ -12,7 +12,7 @@ import CoreData
 class CoreDataManager: NSObject {
     let mainContext: NSManagedObjectContext
 
-    private let managedObjectModel: NSManagedObjectModel
+    let managedObjectModel: NSManagedObjectModel
     private let persistentStore: NSPersistentStore
     private let persistentStoreCoordinator: NSPersistentStoreCoordinator
 

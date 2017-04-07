@@ -156,7 +156,7 @@ class CapturePhotoHelper: NSObject {
     private var captureConnection: AVCaptureConnection?
     private (set) var captureDevice: AVCaptureDevice?
     private let stillImageOutput = AVCaptureStillImageOutput()
-    private let sampleQueue = DispatchQueue(label: "com.zweigraf.DisplayLiveSamples.sampleQueue", attributes: [])
+    private let sampleQueue = DispatchQueue(label: "com.zweigraf.DisplayLiveSamples.sampleQueue")
 }
 
 

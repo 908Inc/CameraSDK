@@ -8,12 +8,15 @@
 
 import UIKit
 
-class WebserviceManager: NSObject {
+enum WebservicesError: String, Error {
+    case noData = "No data received, without error"
+    case unknownFormat = "Received data is in unknown format"
+}
+
+class StoriesWebservices: NSObject {
     enum StampServicesError: String, Error {
         case noStampsReceived
         case invalidUrl
-        case noData = "No data received, without error"
-        case unknownFormat = "Received data is in unknown format"
     }
 
     func getStoryDicts(responseHandler: @escaping (NSDictionary?, Error?) -> ()) {
@@ -36,12 +39,12 @@ class WebserviceManager: NSObject {
                     return
                 }
                 guard let data = data else {
-                    responseHandler(nil, error ?? StampServicesError.noData)
+                    responseHandler(nil, error ?? WebservicesError.noData)
 
                     return
                 }
                 guard let json = try JSONSerialization.jsonObject(with: data) as? NSDictionary else {
-                    responseHandler(nil, error ?? StampServicesError.unknownFormat)
+                    responseHandler(nil, error ?? WebservicesError.unknownFormat)
 
                     return
                 }
