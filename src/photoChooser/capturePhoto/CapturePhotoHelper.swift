@@ -162,20 +162,28 @@ class CapturePhotoHelper: NSObject {
 
 extension CapturePhotoHelper: AVCaptureVideoDataOutputSampleBufferDelegate {
     func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!) {
+        guard let delegate = delegate else {
+            printErr("delegate wasn't set")
+
+            return
+        }
+
         guard let cvImage = CMSampleBufferGetImageBuffer(sampleBuffer) else {
             printErr("can't get imageBuffer")
 
             return
         }
-
+        
+        var ciImage: CIImage
+        
         if #available(iOS 9.0, *) {
-            let ciImage = CIImage(cvImageBuffer: cvImage)
-
-            let emotion = ImageDetector.getEmotion(from: ciImage)
-
-            delegate?.faceObjectsAppeared(emotion)
+            ciImage = CIImage(cvImageBuffer: cvImage)
         } else {
-            // TODO: add iOS8
+            ciImage = CIImage(cvPixelBuffer: cvImage)
         }
+        
+        let emotion = ImageDetector.getEmotion(from: ciImage)
+        
+        delegate.faceObjectsAppeared(emotion)
     }
 }
