@@ -18,8 +18,8 @@ Run pod install - that's it. You all set up
 Complete workflow is very simple and consists of two steps:
 
 
-## 1 - Present a StoryBuilderViewController instance
-Lib uses storyboard, so you can use method from extension to get it:
+### 1 Present a StoryBuilderViewController instance
+Lib uses storyboard, use method from extension to get it:
 
 ```swift
 let storyBuilder = StoryBuilderViewController.storyboardController()
@@ -31,7 +31,7 @@ Then present it whereever you want:
 myContainerViewController.present(storyBuilder, animated: true)
 ```
 
-## 2 - Took the result photo
+### 2 Took the result photo
 
 All the magic happens inside, so you don't have to mess with any processing at all. Just set the delegate property of StoryBuilderViewController and receive an image. For example, you can give a choise to user what to do next:
 
