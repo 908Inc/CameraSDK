@@ -1,6 +1,11 @@
+[![CocoaPods Compatible](https://img.shields.io/cocoapods/v/CameraSDK.svg)](https://img.shields.io/cocoapods/v/CameraSDK.svg)
+[![Platform](https://img.shields.io/cocoapods/p/CameraSDK.svg?style=flat)](http://cocoadocs.org/docsets/CameraSDK)
+
+https://img.shields.io/cocoapods/v/CameraSDK.svg
+
 # About
 
-This lib is an easy to use camera screen, with Stories implementation. 
+CameraSDK is an easy to use camera screen with Stories implementation. 
 
 # Installation
 
