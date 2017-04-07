@@ -1,7 +1,6 @@
 [![Version](https://img.shields.io/cocoapods/v/CameraSDK.svg)](http://stickerpipe.com)
 [![Platform](https://img.shields.io/cocoapods/p/CameraSDK.svg?style=flat)](http://stickerpipe.com)
 
-https://img.shields.io/cocoapods/v/CameraSDK.svg
 
 # About
 
