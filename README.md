@@ -1,5 +1,5 @@
-[![CocoaPods Compatible](https://img.shields.io/cocoapods/v/CameraSDK.svg)](https://img.shields.io/cocoapods/v/CameraSDK.svg)
-[![Platform](https://img.shields.io/cocoapods/p/CameraSDK.svg?style=flat)](http://cocoadocs.org/docsets/CameraSDK)
+[![Version](https://img.shields.io/cocoapods/v/CameraSDK.svg)](http://stickerpipe.com)
+[![Platform](https://img.shields.io/cocoapods/p/CameraSDK.svg?style=flat)](http://stickerpipe.com)
 
 https://img.shields.io/cocoapods/v/CameraSDK.svg
 
