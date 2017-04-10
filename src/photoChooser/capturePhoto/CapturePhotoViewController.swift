@@ -68,8 +68,8 @@ class CapturePhotoViewController: UIViewController {
     }
 
 
-    private let capturePhotoHelper = CapturePhotoHelper()
-    private var cameraLayer: AVCaptureVideoPreviewLayer?
+    let capturePhotoHelper = CapturePhotoHelper()
+    var cameraLayer: AVCaptureVideoPreviewLayer?
     @IBOutlet weak var captureButtonView: CaptureButtonView!
 }
 
