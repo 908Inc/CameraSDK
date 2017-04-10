@@ -8,51 +8,26 @@
 
 import UIKit
 
-enum WebservicesError: String, Error {
-    case noData = "No data received, without error"
-    case unknownFormat = "Received data is in unknown format"
-}
-
-class StoriesWebservices: NSObject {
+class StoriesWebservices: Webservice {
     enum StampServicesError: String, Error {
         case noStampsReceived
         case invalidUrl
     }
 
-    func getStoryDicts(responseHandler: @escaping (NSDictionary?, Error?) -> ()) {
+    func getStoryDicts(responseHandler: @escaping ([String: AnyHashable]?, Error?) -> ()) {
         getRawDicts(fromPath: "stories", responseHandler: responseHandler)
     }
 
-    func getStampDicts(responseHandler: @escaping (NSDictionary?, Error?) -> ()) {
+    func getStampDicts(responseHandler: @escaping ([String: AnyHashable]?, Error?) -> ()) {
         getRawDicts(fromPath: "stamps", responseHandler: responseHandler)
     }
 
-    private func getRawDicts(fromPath path: String, responseHandler: @escaping (NSDictionary?, Error?) -> ()) {
+    private func getRawDicts(fromPath path: String, responseHandler: @escaping ([String: AnyHashable]?, Error?) -> ()) {
         var request = URLRequest.defaultRequest(forPath: path)
         request.httpMethod = "GET"
 
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            do {
-                guard error == nil else {
-                    responseHandler(nil, error)
-
-                    return
-                }
-                guard let data = data else {
-                    responseHandler(nil, error ?? WebservicesError.noData)
-
-                    return
-                }
-                guard let json = try JSONSerialization.jsonObject(with: data) as? NSDictionary else {
-                    responseHandler(nil, error ?? WebservicesError.unknownFormat)
-
-                    return
-                }
-
-                responseHandler(json, nil)
-            } catch {
-                responseHandler(nil, error)
-            }
+        urlSession.dataTask(with: request) { data, response, error in
+            self.parseResponse(data, error: error, completion: responseHandler)
         }.resume()
     }
 }

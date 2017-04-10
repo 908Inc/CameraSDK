@@ -14,7 +14,7 @@ typealias StringBlock = (String) -> ()
 typealias BoolBlock = (Bool) -> ()
 typealias PointBlock = (CGPoint) -> ()
 
-func printErr(_ textError: String, logToServer log: Bool = false, error: Error? = nil, functionName f: String = #function, file: String = #file) {
+public func printErr(_ textError: String, logToServer log: Bool = false, error: Error? = nil, functionName f: String = #function, file: String = #file) {
     var errorLocation = f
 
     if let className = URL(string: file)?.lastPathComponent {

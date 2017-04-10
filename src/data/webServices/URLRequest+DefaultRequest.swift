@@ -25,8 +25,8 @@ fileprivate let appVersionString: String = {
     return appVersion + build
 }()
 
-extension URLRequest {
-    static func defaultRequest(forPath pathComponent: String) -> URLRequest {
+public extension URLRequest {
+    public static func defaultRequest(forPath pathComponent: String) -> URLRequest {
         let url = baseUrl.appendingPathComponent(pathComponent)
 
         var request = URLRequest(url: url)
