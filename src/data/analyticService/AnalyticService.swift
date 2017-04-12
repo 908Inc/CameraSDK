@@ -11,13 +11,14 @@ import CoreData
 
 // prevents any statistic to be sent during debug
 class DebugAnalyticService: AnalyticService {
+    override func appOpenedFromPush(pushId: Int32) {}
     override func stampSelected(stampId: Int32) {}
     override func storySelected(storyId: Int32) {}
     override func storyShared(storyId: Int32) {}
     override func sendAnalytics() {}
 }
 
-class AnalyticService: NSObject {
+public class AnalyticService: NSObject {
     let context: NSManagedObjectContext
     let webservice: AnalyticWebservice
 
@@ -25,17 +26,21 @@ class AnalyticService: NSObject {
         context = moc
         self.webservice = webservice
     }
-    
+
+    public func appOpenedFromPush(pushId: Int32) {
+        storeEvent(forId: pushId, category: Event.Category.appOpen.rawValue, action: Event.Action.push.rawValue)
+    }
+
     func stampSelected(stampId: Int32) {
-        storeEvent(forId: stampId, category: Event.Category.stamp, action: Event.Action.use)
+        storeEvent(forId: stampId, category: Event.Category.stamp.rawValue, action: Event.Action.use.rawValue)
     }
 
     func storySelected(storyId: Int32) {
-        storeEvent(forId: storyId, category: Event.Category.story, action: Event.Action.use)
+        storeEvent(forId: storyId, category: Event.Category.story.rawValue, action: Event.Action.use.rawValue)
     }
 
     func storyShared(storyId: Int32) {
-        storeEvent(forId: storyId, category: Event.Category.story, action: Event.Action.share)
+        storeEvent(forId: storyId, category: Event.Category.story.rawValue, action: Event.Action.share.rawValue)
     }
 
     private func storeEvent(forId id: Int32, category: String, action: String) {

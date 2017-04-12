@@ -17,6 +17,12 @@ public protocol StoryBuilderViewControllerDelegate: class {
 public class StoryBuilderViewController: UIViewController {
     public weak var delegate: StoryBuilderViewControllerDelegate?
 
+    /**
+    Set this property to desired story id before showing. Default is nil
+    */
+
+    public var preselectedStoryId: Int? = nil
+
     override public func viewDidLoad() {
         super.viewDidLoad()
 
@@ -99,9 +105,25 @@ public class StoryBuilderViewController: UIViewController {
                 printErr("can't scan image", error: error)
             }
 
-            self.imageCords = cords
+            DispatchQueue.main.async {
+                if cords != nil {
+                    self.imageEditor.stampsLayerView.faceObjects = cords
 
-            self.imageEditor.stampsLayerView.faceObjects = cords
+                    self.storyPickerView.changePresentation(.shown, animated: true)
+
+                    if let animatedStories = self.animatedStories {
+                        if let storyId = self.preselectedStoryId, let idx = (animatedStories.index { $0.story.id == Int32(storyId) }) {
+                            self.storyPickerView.selectIdx(idx)
+                        } else {
+                            self.storyPickerView.selectIdx(0)
+                        }
+                    }
+                } else {
+                    UIAlertController.show(from: self, for: UIAlertController.UserAlert.lNoFaceFound)
+
+                    self.storyPickerView.changePresentation(.locked, animated: true)
+                }
+            }
         }
     }
 
@@ -218,11 +240,7 @@ public class StoryBuilderViewController: UIViewController {
     private var storyIdx: Int = -1
 
     fileprivate func changeToStory(withIdx storyIdx: Int) {
-        guard let imageCords = imageCords else {
-            printErr("no face detected, can't randomize")
-
-            return
-        }
+        guard self.storyIdx != storyIdx else { return }
 
         guard let animatedStories = animatedStories else {
             printErr("animatedStories didn't loaded")
@@ -239,10 +257,6 @@ public class StoryBuilderViewController: UIViewController {
         guard storyIdx >= 0 else {
             imageEditor.stampsLayerView.removeAllStamps(animated: true)
 
-            return
-        }
-
-        guard self.storyIdx != storyIdx else {
             return
         }
 
@@ -299,24 +313,6 @@ public class StoryBuilderViewController: UIViewController {
 
             UIView.animate(withDuration: 0.3) {
                 self.stampsButton.transform = CGAffineTransform(scaleX: scale, y: scale)
-            }
-        }
-    }
-
-    fileprivate var imageCords: [Face]? {
-        didSet {
-            DispatchQueue.main.async {
-                if self.imageCords != nil {
-                    if self.animatedStories != nil {
-                        self.changeToStory(withIdx: 0)
-                    }
-
-                    self.storyPickerView.changePresentation(.shown, animated: true)
-                } else {
-                    UIAlertController.show(from: self, for: UIAlertController.UserAlert.lNoFaceFound)
-
-                    self.storyPickerView.changePresentation(.locked, animated: true)
-                }
             }
         }
     }
@@ -419,7 +415,7 @@ extension StoryBuilderViewController: StampInteractionDelegate {
 
 extension StoryBuilderViewController: StoryPickerViewDelegate {
     func selectedIdxChanged(_ idx: Int) {
-        if imageCords != nil && self.animatedStories != nil {
+        if imageEditor.stampsLayerView.faceObjects != nil && animatedStories != nil {
             changeToStory(withIdx: idx)
         }
     }

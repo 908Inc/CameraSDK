@@ -19,9 +19,8 @@ extension Event {
 
 extension Event {
 
-    enum Action {
-        static let share = "share"
-        static let use = "use"
+    enum Action: String {
+        case share, use, push
     }
 
 }
@@ -29,9 +28,8 @@ extension Event {
 
 extension Event {
 
-    enum Category {
-        static let stamp = "stamp"
-        static let story = "story"
+    enum Category: String {
+         case stamp, story, appOpen = "app_open"
     }
 
 }

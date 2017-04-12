@@ -9,11 +9,12 @@
 import UIKit
 import SDWebImage
 
-class SessionManager: NSObject {
-    static let shared = SessionManager()
+public class SessionManager: NSObject {
+    public static let shared = SessionManager()
+    public var analyticService: AnalyticService!
+    
     let sdkManager = SDKManager()
     let coreDataManager = CoreDataManager()
-    var analyticService: AnalyticService!
 
     override init() {
         super.init()
