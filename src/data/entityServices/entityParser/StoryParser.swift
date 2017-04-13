@@ -10,6 +10,8 @@ import UIKit
 
 class StoryParser: NSObject {
     func parseJsonArray(_ stampPackDicts: [[String: Any]]) throws {
+        var existedStories = Story.stk_findAll() as? [Story] ?? [Story]()
+
         for (idx, stampPackDict) in stampPackDicts.enumerated() {
             guard let storyId = stampPackDict["id"] as? Int else {
                 printErr("no packId provided", logToServer: true)
@@ -17,7 +19,16 @@ class StoryParser: NSObject {
                 continue
             }
 
-            let existingStory = Story.stk_object(withUniqueAttribute: "id", value: NSNumber(value: storyId))
+            let existingStory: Story
+
+            if let oldStory = (existedStories.first { $0.id == Int32(storyId) }) {
+                existedStories.remove(oldStory)
+
+                existingStory = oldStory
+            } else {
+                existingStory = Story.stk_object(withUniqueAttribute: "id", value: NSNumber(value: storyId))
+            }
+
 
             // update data hash is the same; no need to update
             if existingStory.dataHash == stampPackDict["data_hash"] as? String {
@@ -36,10 +47,14 @@ class StoryParser: NSObject {
             updateStoryStampsFromDicts(storyStampDicts, for: existingStory)
         }
 
+        SessionManager.shared.coreDataManager.removeObjects(existedStories)
+
         try SessionManager.shared.coreDataManager.saveIfNeeded()
     }
 
     func updateStoryStampsFromDicts(_ storyStampDicts: [[String: Any]], for story: Story) {
+        var existedStamps = story.stamps?.allObjects as? [StoryStamp] ?? [StoryStamp]()
+
         for storyStampDict in storyStampDicts {
             guard let stampId = storyStampDict["content_id"] as? Int else {
                 printErr("no stampId provided", logToServer: true)
@@ -47,12 +62,22 @@ class StoryParser: NSObject {
                 continue
             }
 
-            let existingStoryStamp = StoryStamp.stk_object(withUniqueAttribute: "id", value: NSNumber(value: stampId))
+            let existingStoryStamp: StoryStamp
+
+            if let oldStamp = (existedStamps.first { $0.id == Int32(stampId) }) {
+                existedStamps.remove(oldStamp)
+
+                existingStoryStamp = oldStamp
+            } else {
+                existingStoryStamp = StoryStamp.stk_object(withUniqueAttribute: "id", value: NSNumber(value: stampId))
+            }
 
             existingStoryStamp.chargeWithDict(storyStampDict)
 
             existingStoryStamp.story = story
         }
+
+        SessionManager.shared.coreDataManager.removeObjects(existedStamps)
     }
 }
 

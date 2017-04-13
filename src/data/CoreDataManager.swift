@@ -47,6 +47,12 @@ class CoreDataManager: NSObject {
         super.init()
     }
 
+    func removeObjects(_ objects: [NSManagedObject]) {
+        for object in objects {
+            mainContext.delete(object)
+        }
+    }
+
     func saveIfNeeded() throws {
         if mainContext.hasChanges {
             try mainContext.save()

@@ -10,6 +10,8 @@ import UIKit
 
 class StampPackParser: NSObject {
     func parseJsonArray(_ stampPackDicts: [[String: Any]]) throws {
+        var existedPacks = StampPack.stk_findAll() as? [StampPack] ?? [StampPack]()
+
         for (idx, stampPackDict) in stampPackDicts.enumerated() {
             guard let packId = stampPackDict["pack_id"] as? Int else {
                 printErr("no packId provided", logToServer: true)
@@ -17,13 +19,21 @@ class StampPackParser: NSObject {
                 continue
             }
 
-            let existingPack = StampPack.stk_object(withUniqueAttribute: "id", value: NSNumber(value: packId))
+            let updatedPack: StampPack
 
-            let isPackInfoTheSame = existingPack.name == stampPackDict["pack_name"] as? String && existingPack.title == stampPackDict["title"] as? String
+            if let oldPack = (existedPacks.first { $0.id == Int32(packId) }) {
+                existedPacks.remove(oldPack)
+
+                updatedPack = oldPack
+            } else {
+                updatedPack = StampPack.stk_object(withUniqueAttribute: "id", value: NSNumber(value: packId))
+            }
+
+            let isPackInfoTheSame = updatedPack.name == stampPackDict["pack_name"] as? String && updatedPack.title == stampPackDict["title"] as? String
 
             if !isPackInfoTheSame {
-                existingPack.chargeWithDict(stampPackDict)
-                existingPack.orderNumber = Int16(idx)
+                updatedPack.chargeWithDict(stampPackDict)
+                updatedPack.orderNumber = Int16(idx)
             }
 
             guard let stampDicts = stampPackDict["stamps"] as? [[String: Any]] else {
@@ -32,13 +42,17 @@ class StampPackParser: NSObject {
                 continue
             }
 
-            updateStampsFromDicts(stampDicts, for: existingPack)
+            updateStampsFromDicts(stampDicts, for: updatedPack)
         }
+
+        SessionManager.shared.coreDataManager.removeObjects(existedPacks)
 
         try SessionManager.shared.coreDataManager.saveIfNeeded()
     }
 
     func updateStampsFromDicts(_ stampDicts: [[String: Any]], for pack: StampPack) {
+        var existedStamps = pack.stamps?.allObjects as? [Stamp] ?? [Stamp]()
+
         for (idx, stampDict) in stampDicts.enumerated() {
             guard let stampId = stampDict["content_id"] as? Int else {
                 printErr("no stampId provided", logToServer: true)
@@ -46,16 +60,26 @@ class StampPackParser: NSObject {
                 continue
             }
 
-            let existingStamp = Stamp.stk_object(withUniqueAttribute: "id", value: NSNumber(value: stampId))
+            let updatedStamp: Stamp
 
-            let isStampInfoTheSame = existingStamp.name == stampDict["name"] as? String && existingStamp.imageUrl == (stampDict["image"] as? [String: Any])?[Utility.scaleString] as? String
+            if let oldStamp = (existedStamps.first { $0.id == Int32(stampId) }) {
+                existedStamps.remove(oldStamp)
+
+                updatedStamp = oldStamp
+            } else {
+                updatedStamp = Stamp.stk_object(withUniqueAttribute: "id", value: NSNumber(value: stampId))
+            }
+
+            let isStampInfoTheSame = updatedStamp.name == stampDict["name"] as? String && updatedStamp.imageUrl == (stampDict["image"] as? [String: Any])?[Utility.scaleString] as? String
 
             if !isStampInfoTheSame {
-                existingStamp.chargeWithDict(stampDict)
-                existingStamp.pack = pack
-                existingStamp.orderNumber = Int16(idx)
+                updatedStamp.chargeWithDict(stampDict)
+                updatedStamp.pack = pack
+                updatedStamp.orderNumber = Int16(idx)
             }
         }
+
+        SessionManager.shared.coreDataManager.removeObjects(existedStamps)
     }
 }
 
