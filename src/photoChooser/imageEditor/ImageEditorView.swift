@@ -105,7 +105,7 @@ class ImageEditorView: UIView, StampViewDelegate, UIGestureRecognizerDelegate {
         defer {
             UIGraphicsEndImageContext()
         }
-        drawHierarchy(in: self.bounds, afterScreenUpdates: true)
+        drawHierarchy(in: bounds, afterScreenUpdates: true)
 
         guard let image = UIGraphicsGetImageFromCurrentImageContext() else {
             throw ImageEditorViewError.noImageGenerated
