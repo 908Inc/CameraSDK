@@ -83,9 +83,9 @@ public class StoryBuilderViewController: UIViewController {
 
                     if let animatedStories = self.animatedStories {
                         if let storyId = self.preselectedStoryId, let idx = (animatedStories.index { $0.story.id == Int32(storyId) }) {
-                            self.storyPickerView.selectIdx(idx)
+                            self.storyPickerView.selectStory(withIdx: idx)
                         } else {
-                            self.storyPickerView.selectIdx(0)
+                            self.storyPickerView.selectStory(withIdx: 0)
                         }
                     }
                 } else {
@@ -234,7 +234,7 @@ public class StoryBuilderViewController: UIViewController {
         imageEditor.setImage(nil)
         imageEditor.stampsLayerView.removeAllStamps(animated: false)
         storyIdx = -1
-        storyPickerView.selectIdx(-1)
+        storyPickerView.selectStory(withIdx: -1)
     }
 
     @IBAction private func showStickersButtonTapped() {
@@ -309,13 +309,13 @@ public class StoryBuilderViewController: UIViewController {
             return
         }
 
+        self.storyIdx = storyIdx
+
         guard storyIdx >= 0 else {
             imageEditor.stampsLayerView.removeAllStamps(animated: true)
 
             return
         }
-
-        self.storyIdx = storyIdx
 
         func randomInterval() -> TimeInterval {
             let randomNum: UInt32 = arc4random_uniform(200)

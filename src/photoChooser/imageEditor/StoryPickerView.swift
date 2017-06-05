@@ -77,7 +77,7 @@ class StoryPickerView: UIScrollView {
             if noUrls {
                 presentation = .locked
             } else {
-                selectIdx(0)
+                selectStory(withIdx: 0)
                 presentation = .shown
             }
 
@@ -85,9 +85,11 @@ class StoryPickerView: UIScrollView {
         }
     }
 
-    func selectIdx(_ idx: Int) {
-        scrollAndChangeSelectionIfNeeded(to: idx)
-        selectedIdx = idx
+    func selectStory(withIdx idx: Int) {
+        // 0 section is reserved for empty story
+        scrollAndChangeSelectionIfNeeded(to: IndexPath(row: idx, section: 1))
+
+        selectedIdx = idx + 1
     }
 
     func changePresentation(_ newPresentation: StoryPickerViewPresentation, animated: Bool = true) {
@@ -130,14 +132,14 @@ class StoryPickerView: UIScrollView {
                 return
             }
 
-            storyPickerDelegate.selectedIdxChanged(selectedIdx)
+            storyPickerDelegate.selectedIdxChanged(selectedIdx - 1)
         }
     }
 
     @IBAction func selectorViewTapped(_ sender: UITapGestureRecognizer) {
         changePresentation(.hidden)
     }
-    
+
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         // only need this procession for cases, when picker is hidden
         guard presentation == .hidden else {
@@ -164,7 +166,15 @@ class StoryPickerView: UIScrollView {
 }
 
 
-extension StoryPickerView: UIScrollViewDelegate, UICollectionViewDelegate {
+extension StoryPickerView: UIScrollViewDelegate, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout{
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        if section == 0 {
+            return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 15)
+        } else {
+            return UIEdgeInsets()
+        }
+    }
+
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard scrollView == self else {
             return
@@ -188,9 +198,7 @@ extension StoryPickerView: UIScrollViewDelegate, UICollectionViewDelegate {
             return
         }
 
-        defer {
-            contentOffset = CGPoint()
-        }
+        defer { contentOffset = CGPoint() }
 
         if scrollDirection == .horizontal {
             guard presentation == .shown else {
@@ -233,13 +241,9 @@ extension StoryPickerView: UIScrollViewDelegate, UICollectionViewDelegate {
 
             layoutIfNeeded()
 
-            guard let storyPickerDelegate = storyPickerDelegate else {
-                printErr("storyPickerDelegate isn't set")
+            assert(storyPickerDelegate != nil, "storyPickerDelegate is nil")
 
-                return
-            }
-
-            storyPickerDelegate.pickerPositionChanged(collectionViewBottomConstraint.constant)
+            storyPickerDelegate?.pickerPositionChanged(collectionViewBottomConstraint.constant)
         }
     }
 
@@ -256,13 +260,22 @@ extension StoryPickerView: UIScrollViewDelegate, UICollectionViewDelegate {
     }
 
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        scrollAndChangeSelectionIfNeeded(to: indexPath.row)
+        scrollAndChangeSelectionIfNeeded(to: indexPath)
     }
 
-    fileprivate func scrollAndChangeSelectionIfNeeded(to idx: Int) {
-        scrollToClosestCell(at: idx)
+    fileprivate func scrollAndChangeSelectionIfNeeded(to indexPath: IndexPath) {
+        // first section contains 1 row for empty story
+        let absIndexOfCell: Int
 
-        changeSelectionIfNeeded(to: idx)
+        if indexPath.section == 1 {
+            absIndexOfCell = collectionView.numberOfItems(inSection: 0) + indexPath.row
+        } else {
+            absIndexOfCell = indexPath.row
+        }
+
+        scrollToClosestCell(at: absIndexOfCell)
+
+        changeSelectionIfNeeded(to: absIndexOfCell)
     }
 
     private func invalidatePickerPresentation() {
@@ -286,7 +299,7 @@ extension StoryPickerView: UIScrollViewDelegate, UICollectionViewDelegate {
             return
         }
 
-        scrollAndChangeSelectionIfNeeded(to: indexPath.row)
+        scrollAndChangeSelectionIfNeeded(to: indexPath)
     }
 
     private func scrollToClosestCell(at index: Int) {
@@ -340,32 +353,47 @@ extension StoryPickerView: UIScrollViewDelegate, UICollectionViewDelegate {
 
 
 extension StoryPickerView: UICollectionViewDataSource {
+    public func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 2
+    }
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let imageUrls = imageUrls else {
-            printErr("no images set")
+        switch section {
+        case 0: return 1
+        case 1:
+            guard let imageUrls = imageUrls else {
+                printErr("no images set")
 
-            return 0
+                return 0
+            }
+
+            return imageUrls.count
+        default:
+            fatalError("unexpected section")
         }
-
-        return imageUrls.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Ids.lImageCollectionViewCell, for: indexPath) as? ImageCollectionViewCell else {
-            printErr("can't dequeue needed cell")
+        switch indexPath.section {
+        case 0:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Ids.lImageCollectionViewCell, for: indexPath) as? ImageCollectionViewCell else { fatalError("can't dequeue needed cell") }
+            cell.charge(withImage: storyPickerDelegate?.placeholderImage)
+            return cell
+        case 1:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Ids.lImageCollectionViewCell, for: indexPath) as? ImageCollectionViewCell else { fatalError("can't dequeue needed cell") }
 
-            return UICollectionViewCell()
-        }
+            guard let imageUrls = imageUrls, imageUrls.count > indexPath.row else {
+                printErr("provided images are not enough")
 
-        guard let imageUrls = imageUrls, imageUrls.count > indexPath.row else {
-            printErr("provided images are not enough")
+                return cell
+            }
+
+            cell.charge(with: imageUrls[indexPath.row], placeholderImage: storyPickerDelegate?.placeholderImage)
 
             return cell
+        default:
+            fatalError("unexpected section")
         }
-
-        cell.charge(with: imageUrls[indexPath.row], placeholderImage: storyPickerDelegate?.placeholderImage)
-
-        return cell
     }
 }
 

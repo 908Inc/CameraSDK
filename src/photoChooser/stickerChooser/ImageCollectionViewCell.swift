@@ -34,6 +34,12 @@ extension ImageCollectionViewCell {
             return
         }
 
-        imageView.sd_setImage(with: imageUrl, placeholderImage: placeholderImage)
+        imageView.sd_setImage(with: url, placeholderImage: placeholderImage)
+    }
+
+    func charge(withImage image: UIImage?) {
+        imageView.sd_cancelCurrentImageLoad()
+        
+        imageView.image = image
     }
 }
