@@ -22,55 +22,38 @@ class StoriesEntityService: NSObject {
 
     func updateStamps(completion: @escaping ((Error?) -> ())) {
         StoriesWebservices().getStampDicts { json, error in
-            guard error == nil else {
-                completion(error)
-
-                return
-            }
-            guard let json = json else {
-                printErr("unexpected condition; json is nil, error is nil", logToServer: true)
-
-                completion(nil)
-
-                return
-            }
-            guard let dataArray = json["data"] as? [[String: Any]] else {
-                completion(StoriesEntityServiceError.incompleteData)
-
-                return
-            }
-
-            do {
-                try StampPackParser().parseJsonArray(dataArray)
-                completion(nil)
-            } catch {
-                completion(error)
-            }
+            self.updateCurrentStore(withReceivedJson: json, error: error, usingParser: StampPackParser(), completion: completion)
         }
     }
 
     func updateStories(completion: @escaping ((Error?) -> ())) {
         StoriesWebservices().getStoryDicts { json, error in
-            guard error == nil else {
-                completion(error)
+            self.updateCurrentStore(withReceivedJson: json, error: error, usingParser: StoryParser(), completion: completion)
+        }
+    }
 
-                return
-            }
-            guard let json = json else {
-                printErr("unexpected condition; json is nil, error is nil", logToServer: true)
+    private func updateCurrentStore(withReceivedJson json: [String: AnyHashable]?, error: Error?, usingParser parser: Parser, completion: @escaping ((Error?) -> ())) {
+        guard error == nil else {
+            completion(error)
 
-                completion(nil)
+            return
+        }
+        guard let json = json else {
+            printErr("unexpected condition; json is nil, error is nil", logToServer: true)
 
-                return
-            }
-            guard let dataArray = json["data"] as? [[String: Any]] else {
-                completion(StoriesEntityServiceError.incompleteData)
+            completion(nil)
 
-                return
-            }
+            return
+        }
+        guard let dataArray = json["data"] as? [[String: Any]], dataArray.count > 0 else {
+            completion(StoriesEntityServiceError.incompleteData)
 
+            return
+        }
+
+        SessionManager.shared.coreDataManager.mainContext.perform {
             do {
-                try StoryParser().parseJsonArray(dataArray)
+                try parser.parseJsonArray(dataArray)
                 completion(nil)
             } catch {
                 completion(error)
@@ -78,3 +61,11 @@ class StoriesEntityService: NSObject {
         }
     }
 }
+
+
+protocol Parser {
+    func parseJsonArray(_ stampPackDicts: [[String: Any]]) throws
+}
+
+extension StampPackParser: Parser {}
+extension StoryParser: Parser {}

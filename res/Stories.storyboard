@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -123,7 +123,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fgh-AF-Uwv">
-                                        <rect key="frame" x="0.0" y="20" width="375" height="767"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="767"/>
                                         <subviews>
                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="6DH-hj-dRu">
                                                 <rect key="frame" x="0.0" y="667" width="375" height="100"/>
@@ -145,7 +145,7 @@
                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <subviews>
-                                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Rgf-rz-xtG">
+                                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="Rgf-rz-xtG">
                                                                     <rect key="frame" x="10" y="10" width="80" height="80"/>
                                                                 </imageView>
                                                             </subviews>
@@ -191,7 +191,7 @@
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="Fgh-AF-Uwv" secondAttribute="bottom" id="0TG-Ch-Ck2"/>
-                                    <constraint firstItem="Fgh-AF-Uwv" firstAttribute="top" secondItem="HkR-xT-o7D" secondAttribute="top" constant="20" id="880-A9-jYq"/>
+                                    <constraint firstItem="Fgh-AF-Uwv" firstAttribute="top" secondItem="HkR-xT-o7D" secondAttribute="top" id="880-A9-jYq"/>
                                     <constraint firstItem="Fgh-AF-Uwv" firstAttribute="leading" secondItem="HkR-xT-o7D" secondAttribute="leading" id="Chc-jc-CHR"/>
                                     <constraint firstAttribute="trailing" secondItem="Fgh-AF-Uwv" secondAttribute="trailing" id="p36-Uq-yLZ"/>
                                 </constraints>
@@ -241,7 +241,6 @@
                             <constraint firstItem="e0i-5L-7p9" firstAttribute="leading" secondItem="p5f-zm-ucF" secondAttribute="leading" id="6gz-mw-cGp"/>
                             <constraint firstItem="2fF-I2-eaq" firstAttribute="top" secondItem="e0i-5L-7p9" secondAttribute="bottom" id="AQm-np-TYF"/>
                             <constraint firstItem="IDl-0I-gBD" firstAttribute="width" secondItem="IDl-0I-gBD" secondAttribute="height" id="Hxm-aV-Idt"/>
-                            <constraint firstItem="HkR-xT-o7D" firstAttribute="top" secondItem="ha9-Ea-3MC" secondAttribute="bottom" constant="-20" id="IMw-h9-VCc"/>
                             <constraint firstAttribute="trailing" secondItem="HkR-xT-o7D" secondAttribute="trailing" id="OJa-RQ-F41"/>
                             <constraint firstItem="0M2-8G-50r" firstAttribute="width" secondItem="0M2-8G-50r" secondAttribute="height" id="Sej-I8-ArT"/>
                             <constraint firstItem="HkR-xT-o7D" firstAttribute="leading" secondItem="p5f-zm-ucF" secondAttribute="leading" id="VoV-hr-RLB"/>
@@ -251,6 +250,7 @@
                             <constraint firstItem="2fF-I2-eaq" firstAttribute="top" secondItem="0M2-8G-50r" secondAttribute="bottom" constant="14" id="YmR-lC-xHQ"/>
                             <constraint firstItem="Fgh-AF-Uwv" firstAttribute="width" secondItem="e0i-5L-7p9" secondAttribute="width" id="Zhe-Ao-aYP"/>
                             <constraint firstItem="IDl-0I-gBD" firstAttribute="leading" secondItem="p5f-zm-ucF" secondAttribute="leadingMargin" id="jhy-LJ-feF"/>
+                            <constraint firstItem="HkR-xT-o7D" firstAttribute="top" secondItem="p5f-zm-ucF" secondAttribute="top" id="o5K-xA-XI5"/>
                             <constraint firstItem="nq4-wl-4LX" firstAttribute="width" secondItem="nq4-wl-4LX" secondAttribute="height" id="ppo-G6-naV"/>
                             <constraint firstItem="e0i-5L-7p9" firstAttribute="top" secondItem="p5f-zm-ucF" secondAttribute="top" id="rXT-0k-7Wx"/>
                             <constraint firstItem="2fF-I2-eaq" firstAttribute="top" secondItem="HkR-xT-o7D" secondAttribute="bottom" id="tnt-LH-PwC"/>
@@ -276,7 +276,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-308" y="125"/>
+            <point key="canvasLocation" x="-308" y="124.58770614692655"/>
         </scene>
         <!--Stamp Chooser View Controller-->
         <scene sceneID="Zf4-de-6ce">
@@ -396,5 +396,6 @@
         <image name="ic_makePhoto" width="96" height="96"/>
         <image name="ic_send" width="48" height="48"/>
         <image name="ic_storiesPicker" width="48" height="48"/>
+        <image name="placeholder" width="120" height="120"/>
     </resources>
 </document>

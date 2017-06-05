@@ -31,6 +31,18 @@ class CapturePhotoViewController: UIViewController {
         }
     }
 
+    open override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        capturePhotoHelper.captureSession.startRunning()
+    }
+
+    open override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        capturePhotoHelper.captureSession.stopRunning()
+    }
+
     override func viewDidLayoutSubviews() {
         cameraLayer?.frame = view.bounds
     }
@@ -64,7 +76,7 @@ class CapturePhotoViewController: UIViewController {
     @IBAction func changeCameraButtonTapped(_ sender: UIButton) {
         sender.isSelected = !sender.isSelected
 
-        capturePhotoHelper.setCaptureDeviceForPosition(sender.isSelected ? .back : .front)
+        capturePhotoHelper.changeCaptureDevicePosition(to: sender.isSelected ? .back : .front)
     }
 
 

@@ -9,11 +9,11 @@
 import UIKit
 
 class StoryParser: NSObject {
-    func parseJsonArray(_ stampPackDicts: [[String: Any]]) throws {
+    func parseJsonArray(_ storiesDicts: [[String: Any]]) throws {
         var existedStories = Story.stk_findAll() as? [Story] ?? [Story]()
 
-        for (idx, stampPackDict) in stampPackDicts.enumerated() {
-            guard let storyId = stampPackDict["id"] as? Int else {
+        for (idx, storyDict) in storiesDicts.enumerated() {
+            guard let storyId = storyDict["id"] as? Int else {
                 printErr("no packId provided", logToServer: true)
 
                 continue
@@ -31,14 +31,14 @@ class StoryParser: NSObject {
 
 
             // update data hash is the same; no need to update
-            if existingStory.dataHash == stampPackDict["data_hash"] as? String {
+            if existingStory.dataHash == storyDict["data_hash"] as? String {
                 continue
             }
 
-            existingStory.chargeWithDict(stampPackDict)
+            existingStory.chargeWithDict(storyDict)
             existingStory.orderNumber = Int16(idx)
 
-            guard let storyStampDicts = stampPackDict["content"] as? [[String: Any]] else {
+            guard let storyStampDicts = storyDict["content"] as? [[String: Any]] else {
                 printErr("stamp pack is empty", logToServer: true)
 
                 continue
@@ -53,31 +53,20 @@ class StoryParser: NSObject {
     }
 
     func updateStoryStampsFromDicts(_ storyStampDicts: [[String: Any]], for story: Story) {
-        var existedStamps = story.stamps?.allObjects as? [StoryStamp] ?? [StoryStamp]()
+        if let existedStamps = story.stamps?.allObjects as? [StoryStamp] {
+            SessionManager.shared.coreDataManager.removeObjects(existedStamps)
+        }
 
         for storyStampDict in storyStampDicts {
-            guard let stampId = storyStampDict["content_id"] as? Int else {
-                printErr("no stampId provided", logToServer: true)
+            guard let existingStoryStamp: StoryStamp = StoryStamp.insertNewObject() else {
+                printErr("can't insert new stamp")
 
                 continue
             }
 
-            let existingStoryStamp: StoryStamp
-
-            if let oldStamp = (existedStamps.first { $0.id == Int32(stampId) }) {
-                existedStamps.remove(oldStamp)
-
-                existingStoryStamp = oldStamp
-            } else {
-                existingStoryStamp = StoryStamp.stk_object(withUniqueAttribute: "id", value: NSNumber(value: stampId))
-            }
-
             existingStoryStamp.chargeWithDict(storyStampDict)
-
             existingStoryStamp.story = story
         }
-
-        SessionManager.shared.coreDataManager.removeObjects(existedStamps)
     }
 }
 
@@ -101,6 +90,12 @@ fileprivate extension Story {
 
 fileprivate extension StoryStamp {
     func chargeWithDict(_ dict: [String: Any]) {
+        if let stampId = dict["content_id"] as? Int {
+            self.id = Int32(stampId)
+        } else {
+            printErr("no stampId provided", logToServer: true)
+        }
+
         if let imageUrl = (dict["image"] as? [String: Any])?[Utility.scaleString] as? String {
             self.imageUrl = imageUrl
         } else {
@@ -116,7 +111,7 @@ fileprivate extension StoryStamp {
         if let pointDicts = dict["points"] as? [[String: Any]] {
             let stampPositionPointsContainer = StampPositionPointsContainer(dicts: pointDicts)
 
-            self.pointsContainer = stampPositionPointsContainer
+            pointsContainer = stampPositionPointsContainer
         } else {
             printErr("stamp points are invalid")
         }

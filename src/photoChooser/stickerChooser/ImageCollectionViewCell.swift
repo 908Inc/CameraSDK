@@ -25,7 +25,15 @@ class ImageCollectionViewCell: UICollectionViewCell {
 import SDWebImage
 
 extension ImageCollectionViewCell {
-    func charge(with imageUrl: URL) {
-        imageView.sd_setImage(with: imageUrl, placeholderImage: UIImage(named: "placeholder"))
+    func charge(with imageUrl: URL?, placeholderImage: UIImage?) {
+        guard let url = imageUrl else {
+            imageView.image = placeholderImage
+
+            printErr("no imageUrl provided")
+
+            return
+        }
+
+        imageView.sd_setImage(with: imageUrl, placeholderImage: placeholderImage)
     }
 }

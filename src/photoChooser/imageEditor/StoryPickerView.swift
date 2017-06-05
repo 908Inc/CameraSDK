@@ -10,6 +10,8 @@ import UIKit
 import SDWebImage
 
 protocol StoryPickerViewDelegate: class {
+    var placeholderImage: UIImage { get }
+
     func selectedIdxChanged(_ idx: Int)
 
     func presentationChanged(_ presentation: StoryPickerViewPresentation)
@@ -361,13 +363,7 @@ extension StoryPickerView: UICollectionViewDataSource {
             return cell
         }
 
-        guard let url = imageUrls[indexPath.row] else {
-            printErr("no imageUrl provided")
-
-            return cell
-        }
-
-        cell.charge(with: url)
+        cell.charge(with: imageUrls[indexPath.row], placeholderImage: storyPickerDelegate?.placeholderImage)
 
         return cell
     }

@@ -102,17 +102,19 @@ class CapturePhotoHelper: NSObject {
 
             let image = UIImage(cgImage: cgImageRef, scale: 1.0, orientation: orientation)
 
-            guard let capturedPhoto = image.fixOrientation() else {
-                printErr("can't access photo after fixing orientation")
-
-                return
-            }
-
-            resultImage = capturedPhoto
+            resultImage = image
         }
     }
 
-    func setCaptureDeviceForPosition(_ position: AVCaptureDevicePosition) {
+    func changeCaptureDevicePosition(to position: AVCaptureDevicePosition) {
+        captureSession.stopRunning()
+
+        setCaptureDeviceForPosition(position)
+
+        captureSession.startRunning()
+    }
+
+    private func setCaptureDeviceForPosition(_ position: AVCaptureDevicePosition) {
         guard let devices = AVCaptureDevice.devices() else {
             printErr("no devices found")
 
@@ -143,8 +145,6 @@ class CapturePhotoHelper: NSObject {
 
             captureSession.commitConfiguration()
 
-            captureSession.startRunning() //??
-
             captureDevice = newCaptureDevice
             deviceInput = newDeviceInput
         } catch {
@@ -163,7 +163,7 @@ class CapturePhotoHelper: NSObject {
 extension CapturePhotoHelper: AVCaptureVideoDataOutputSampleBufferDelegate {
     func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!) {
         guard let delegate = delegate else {
-            printErr("delegate wasn't set")
+//            printErr("delegate wasn't set")
 
             return
         }

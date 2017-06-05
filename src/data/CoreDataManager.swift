@@ -122,3 +122,10 @@ extension NSManagedObject {
         return object!
     }
 }
+
+
+extension NSManagedObject {
+    static func insertNewObject<T: NSManagedObject>(inContext context: NSManagedObjectContext = SessionManager.shared.coreDataManager.mainContext) -> T? {
+        return NSEntityDescription.insertNewObject(forEntityName: String(describing: self), into: context) as? T
+    }
+}

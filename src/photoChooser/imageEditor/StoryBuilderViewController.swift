@@ -11,11 +11,33 @@ import Messages
 import MBProgressHUD
 
 public protocol StoryBuilderViewControllerDelegate: class {
-    func shareImage(_ image: UIImage)
+    func shareImage(_ image: UIImage, from storyBuilder: StoryBuilderViewController)
+
+
+    // default implementation will present camera
+    func resetButtonTapped(_ storyBuilder: StoryBuilderViewController)
+}
+
+public extension StoryBuilderViewControllerDelegate {
+    func resetButtonTapped(_ storyBuilder: StoryBuilderViewController) {
+        storyBuilder.showCamera(true)
+    }
 }
 
 public class StoryBuilderViewController: UIViewController {
     public weak var delegate: StoryBuilderViewControllerDelegate?
+
+    /**
+    Enables square mode - result image crops to square
+    */
+
+    public var isSquaredCroppingEnabled = false
+
+    /**
+    Placeholder image. Used in StoryPicker for absent images, or during downloading
+    */
+
+    public var placeholderImage = UIImage(named: "placeholder", in: Bundle(for: ImageCollectionViewCell.self), compatibleWith: nil)!
 
     /**
     Set this property to desired story id before showing. Default is nil
@@ -23,72 +45,20 @@ public class StoryBuilderViewController: UIViewController {
 
     public var preselectedStoryId: Int? = nil
 
-    override public func viewDidLoad() {
-        super.viewDidLoad()
+    /**
+    Set this property to false to disable stamps and hide button. Default is true
+    */
 
-        stampChooserViewController.delegate = self
-        capturePhotoViewController.delegate = self
+    public var isStampsEnabled: Bool = true
 
-        showCamera(true)
+    public func setUp(for image: UIImage) {
+        guard let image = image.fixOrientation() else {
+            printErr("can't access photo after fixing orientation")
 
-        loadInitialData()
-    }
-
-    private func loadInitialData() {
-        loadCachedStories()
-
-        var activityIndicator: MBProgressHUD?
-
-        if animatedStories?.count ?? 0 == 0 {
-            activityIndicator = view.showActivityIndicator()
-        }
-
-        stickersService.updateStories { error in
-            DispatchQueue.main.async {
-                defer {
-                    if let activityIndicator = activityIndicator {
-                        activityIndicator.hide(animated: true)
-                    }
-                }
-
-                guard error == nil else {
-                    switch (error! as NSError).code {
-                    case NSURLErrorNotConnectedToInternet:
-                        if self.animatedStories?.count ?? 0 == 0 {
-                            UIAlertController.show(from: self, for: UIAlertController.UserAlert.lNoInternet)
-                        }
-                    default:
-                        printErr("error during updating stories", logToServer: true, error: error)
-                    }
-
-                    return
-                }
-
-                if self.animatedStories?.count ?? 0 == 0 {
-                    self.loadCachedStories()
-                }
-            }
-        }
-
-        stickersService.updateStamps { error in
-            guard error == nil else {
-                switch (error! as NSError).code {
-                case NSURLErrorNotConnectedToInternet:()
-                default:
-                    printErr("error during updating stories", logToServer: true, error: error)
-                }
-
-                return
-            }
-        }
-    }
-
-    fileprivate func setUp(for image: UIImage?) {
-        imageEditor.setImage(image)
-
-        guard let image = image else {
             return
         }
+
+        imageEditor.setImage(image)
 
         DispatchQueue.global().async {
             guard let ciImage = CIImage(image: image) else {
@@ -128,9 +98,106 @@ public class StoryBuilderViewController: UIViewController {
     }
 
 
+    override public func viewDidLoad() {
+        super.viewDidLoad()
+
+        stampsButton.isHidden = !isStampsEnabled
+
+        stampChooserViewController.delegate = self
+        capturePhotoViewController.delegate = self
+
+        loadInitialData()
+    }
+
+
+    private func loadCachedStories() {
+        let defaultSortDescriptor = NSSortDescriptor(key: #keyPath(Story.orderNumber), ascending: true)
+
+        guard let stories = Story.stk_findAll(sortDescriptors: [defaultSortDescriptor]) as? [Story], !stories.isEmpty else {
+            printErr("no stamp stories found")
+
+            return
+        }
+
+        var _stories = [AnimatedStory]()
+
+        for story in stories {
+            guard story.stamps?.count ?? 0 > 0 else {
+                printErr("no stamps for story \(story)")
+
+                continue
+            }
+
+            _stories.append(AnimatedStory(story: story))
+        }
+
+        animatedStories = _stories
+
+        guard let animatedStories = animatedStories, animatedStories.count > 0 else {
+            printErr("no available stories found")
+
+            return
+        }
+
+        storyPickerView.imageUrls = animatedStories.map { animatedStory in
+            if let iconUrl = animatedStory.story.iconUrl {
+                return URL(string: iconUrl)
+            } else {
+                return nil
+            }
+        }
+    }
+
+    func loadInitialData() {
+        loadCachedStories()
+
+        var activityIndicator: MBProgressHUD?
+
+        if animatedStories?.count ?? 0 == 0 {
+            activityIndicator = view.showActivityIndicator()
+        }
+
+        stickersService.updateStories { error in
+            DispatchQueue.main.async {
+                defer { activityIndicator?.hide(animated: true) }
+
+                guard error == nil else {
+                    switch (error! as NSError).code {
+                    case NSURLErrorNotConnectedToInternet:
+                        if self.animatedStories?.count ?? 0 == 0 {
+                            UIAlertController.show(from: self, for: UIAlertController.UserAlert.lNoInternet)
+                        }
+                    default:
+                        printErr("error during updating stories", logToServer: true, error: error)
+                    }
+
+                    return
+                }
+
+                if self.animatedStories?.count ?? 0 == 0 {
+                    self.loadCachedStories()
+                }
+            }
+        }
+
+        if isStampsEnabled {
+            stickersService.updateStamps { error in
+                guard error == nil else {
+                    switch (error! as NSError).code {
+                    case NSURLErrorNotConnectedToInternet:()
+                    default:
+                        printErr("error during updating stories", logToServer: true, error: error)
+                    }
+
+                    return
+                }
+            }
+        }
+    }
+
     // MARK: -
 
-    func showCamera(_ show: Bool) {
+    public func showCamera(_ show: Bool) {
         // use this code instead of self.present(_...), because of inability to present from viewDidLoad
         if show {
             let captureView = capturePhotoViewController.view!
@@ -156,11 +223,18 @@ public class StoryBuilderViewController: UIViewController {
     }
 
     @IBAction private func resetButtonTapped() {
-        setUp(for: nil)
-        showCamera(true)
+        guard let delegate = delegate else {
+            printErr("set delegate to StoryBuilderViewController")
+
+            return
+        }
+
+        delegate.resetButtonTapped(self)
+
+        imageEditor.setImage(nil)
+        imageEditor.stampsLayerView.removeAllStamps(animated: false)
         storyIdx = -1
         storyPickerView.selectIdx(-1)
-        imageEditor.stampsLayerView.removeAllStamps(animated: false)
     }
 
     @IBAction private func showStickersButtonTapped() {
@@ -168,23 +242,43 @@ public class StoryBuilderViewController: UIViewController {
     }
 
     @IBAction private func shareButtonTapped() {
+        proceed()
+    }
+
+    func proceed() {
         do {
             let image = try imageEditor.getResultImage().image
 
-            guard let delegate = delegate else {
-                printErr("set delegate to capture result image in -shareImage method")
-
-                return
+            if isSquaredCroppingEnabled {
+                cropImage(image)
+            } else {
+                shareImage(image)
             }
-
-            if let animatedStories = animatedStories, storyIdx >= 0, animatedStories.count < storyIdx {
-                SessionManager.shared.analyticService.storyShared(storyId: animatedStories[storyIdx].story.id)
-            }
-
-            delegate.shareImage(image)
         } catch {
             UIAlertController.show(from: self, for: UIAlertController.UserAlert.lIncorrectImage)
         }
+    }
+
+    private func cropImage(_ image: UIImage) {
+//        let squareCropImageView = SquareCropImageView(image: image)
+//        squareCropImageView.translatesAutoresizingMaskIntoConstraints = false
+//        view.addSubview(squareCropImageView)
+//        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[squareCropImageView]|", metrics: nil, views: ["squareCropImageView": squareCropImageView]))
+//        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[squareCropImageView]|", metrics: nil, views: ["squareCropImageView": squareCropImageView]))
+    }
+
+    private func shareImage(_ image: UIImage) {
+        guard let delegate = delegate else {
+            printErr("set delegate to capture result image in -shareImage method")
+
+            return
+        }
+
+        if let animatedStories = animatedStories, storyIdx >= 0, animatedStories.count < storyIdx {
+            SessionManager.shared.analyticService.storyShared(storyId: animatedStories[storyIdx].story.id)
+        }
+
+        delegate.shareImage(image, from: self)
     }
 
     fileprivate class AnimatedStory {
@@ -197,45 +291,6 @@ public class StoryBuilderViewController: UIViewController {
     }
 
     fileprivate var animatedStories: [AnimatedStory]? = nil
-
-    private func loadCachedStories() {
-        let defaultSortDescriptor = NSSortDescriptor(key: #keyPath(Story.orderNumber), ascending: true)
-
-        guard let stories = Story.stk_findAll(sortDescriptors: [defaultSortDescriptor]) as? [Story], !stories.isEmpty else {
-            printErr("no stamp stories found")
-
-            return
-        }
-
-        var _stories = [AnimatedStory]()
-
-        for story in stories {
-            guard story.stamps?.count ?? 0 > 0 else {
-                printErr("no stamps for story \(story)")
-
-                continue
-            }
-
-            _stories.append(AnimatedStory(story: story))
-        }
-
-        animatedStories = _stories
-
-        guard let animatedStories = animatedStories else {
-            printErr("no available stories found")
-
-            return
-        }
-
-        storyPickerView.imageUrls = animatedStories.map { animatedStory in
-            if let iconUrl = animatedStory.story.iconUrl {
-                return URL(string: iconUrl)
-            } else {
-                return nil
-            }
-        }
-    }
-
 
     private var storyIdx: Int = -1
 
@@ -425,8 +480,8 @@ extension StoryBuilderViewController: StoryPickerViewDelegate {
     }
 
     func pickerPositionChanged(_ value: CGFloat) {
-        resetButtonTopConstraint.constant = -value + 14
-        sendButtonBottomConstraint.constant = -value + 14
+        resetButtonTopConstraint.constant = -value + buttonsShownYPosition
+        sendButtonBottomConstraint.constant = -value + buttonsShownYPosition
 
         view.layoutIfNeeded()
     }
