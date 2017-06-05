@@ -10,6 +10,11 @@ import UIKit
 
 class ImageCollectionViewCell: UICollectionViewCell {
     @IBOutlet fileprivate weak var imageView: UIImageView!
+    @IBOutlet private weak var substrateView: UIView! {
+        didSet {
+            substrateView.layer.cornerRadius = substrateView.width / 2
+        }
+    }
 
     var image: UIImage? {
         get {

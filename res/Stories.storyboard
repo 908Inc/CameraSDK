@@ -145,6 +145,10 @@
                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <subviews>
+                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Mo-g2-9iy">
+                                                                    <rect key="frame" x="10" y="10" width="80" height="80"/>
+                                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                                </view>
                                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="Rgf-rz-xtG">
                                                                     <rect key="frame" x="10" y="10" width="80" height="80"/>
                                                                 </imageView>
@@ -153,11 +157,16 @@
                                                         <constraints>
                                                             <constraint firstItem="Rgf-rz-xtG" firstAttribute="top" secondItem="6Yu-ss-vxu" secondAttribute="top" constant="10" id="2mq-ic-8iW"/>
                                                             <constraint firstItem="Rgf-rz-xtG" firstAttribute="leading" secondItem="6Yu-ss-vxu" secondAttribute="leading" constant="10" id="AGp-8e-t6J"/>
+                                                            <constraint firstItem="8Mo-g2-9iy" firstAttribute="trailing" secondItem="Rgf-rz-xtG" secondAttribute="trailing" id="Af5-3M-S3t"/>
                                                             <constraint firstAttribute="bottom" secondItem="Rgf-rz-xtG" secondAttribute="bottom" constant="10" id="JOK-Me-GEi"/>
+                                                            <constraint firstItem="8Mo-g2-9iy" firstAttribute="leading" secondItem="Rgf-rz-xtG" secondAttribute="leading" id="WIC-FH-Pat"/>
                                                             <constraint firstAttribute="trailing" secondItem="Rgf-rz-xtG" secondAttribute="trailing" constant="10" id="bTm-7d-QWb"/>
+                                                            <constraint firstItem="8Mo-g2-9iy" firstAttribute="top" secondItem="Rgf-rz-xtG" secondAttribute="top" id="qeO-gb-bBO"/>
+                                                            <constraint firstItem="8Mo-g2-9iy" firstAttribute="bottom" secondItem="Rgf-rz-xtG" secondAttribute="bottom" id="wHW-jE-7TR"/>
                                                         </constraints>
                                                         <connections>
                                                             <outlet property="imageView" destination="Rgf-rz-xtG" id="BPF-NR-YvP"/>
+                                                            <outlet property="substrateView" destination="8Mo-g2-9iy" id="EHs-iK-ipm"/>
                                                         </connections>
                                                     </collectionViewCell>
                                                 </cells>

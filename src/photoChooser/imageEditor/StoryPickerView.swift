@@ -377,7 +377,7 @@ extension StoryPickerView: UICollectionViewDataSource {
         switch indexPath.section {
         case 0:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Ids.lImageCollectionViewCell, for: indexPath) as? ImageCollectionViewCell else { fatalError("can't dequeue needed cell") }
-            cell.charge(withImage: storyPickerDelegate?.placeholderImage)
+            cell.charge(withImage: nil)
             return cell
         case 1:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Ids.lImageCollectionViewCell, for: indexPath) as? ImageCollectionViewCell else { fatalError("can't dequeue needed cell") }
