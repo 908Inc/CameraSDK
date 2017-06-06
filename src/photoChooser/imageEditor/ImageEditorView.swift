@@ -12,10 +12,20 @@ enum ImageEditorViewError: Error {
 }
 
 class ImageEditorView: UIView, StampViewDelegate, UIGestureRecognizerDelegate {
-    fileprivate weak var imageView: UIImageView!
+    weak var imageView: UIImageView!
     private weak var panGestureRecognizer: UIPanGestureRecognizer?
-    weak var stampsLayerView: StampsLayerView!
 
+    var equalImageViewHeightConstraint: NSLayoutConstraint!
+    var squareImageViewHeightConstraint: NSLayoutConstraint!
+
+    var isSquareMode = false {
+        didSet {
+            equalImageViewHeightConstraint.isActive = !isSquareMode
+            squareImageViewHeightConstraint.isActive = isSquareMode
+        }
+    }
+
+    weak var stampsLayerView: StampsLayerView!
     weak var stampViewsDelegate: StampViewDelegate?
 
     override init(frame: CGRect) {
@@ -37,8 +47,14 @@ class ImageEditorView: UIView, StampViewDelegate, UIGestureRecognizerDelegate {
 
         imageView.contentMode = .scaleAspectFill
         addSubview(imageView)
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[imageView]|", metrics: nil, views: ["imageView": imageView]))
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[imageView]|", metrics: nil, views: ["imageView": imageView]))
+        addConstraint(NSLayoutConstraint(item: self, attribute: .centerY, relatedBy: .equal, toItem: imageView, attribute: .centerY, multiplier: 1, constant: 0))
+        equalImageViewHeightConstraint = NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: imageView, attribute: .height, multiplier: 1, constant: 0)
+        squareImageViewHeightConstraint = NSLayoutConstraint(item: imageView, attribute: .height, relatedBy: .equal, toItem: imageView, attribute: .width, multiplier: 1, constant: 0)
+        squareImageViewHeightConstraint.isActive = false
+
+        addConstraints([equalImageViewHeightConstraint, squareImageViewHeightConstraint])
+
 
         self.imageView = imageView
 
@@ -53,8 +69,10 @@ class ImageEditorView: UIView, StampViewDelegate, UIGestureRecognizerDelegate {
         let stampsLayerView = StampsLayerView.layoutInst() as StampsLayerView
         stampsLayerView.stampViewDelegate = self
         addSubview(stampsLayerView)
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[stampsLayerView]|", metrics: nil, views: ["stampsLayerView": stampsLayerView]))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[stampsLayerView]|", metrics: nil, views: ["stampsLayerView": stampsLayerView]))
+        addConstraint(NSLayoutConstraint(item: imageView, attribute: .centerY, relatedBy: .equal, toItem: stampsLayerView, attribute: .centerY, multiplier: 1, constant: 0))
+        addConstraint(NSLayoutConstraint(item: imageView, attribute: .centerX, relatedBy: .equal, toItem: stampsLayerView, attribute: .centerX, multiplier: 1, constant: 0))
+        addConstraint(NSLayoutConstraint(item: imageView, attribute: .width, relatedBy: .equal, toItem: stampsLayerView, attribute: .width, multiplier: 1, constant: 0))
+        addConstraint(NSLayoutConstraint(item: imageView, attribute: .height, relatedBy: .equal, toItem: stampsLayerView, attribute: .height, multiplier: 1, constant: 0))
         self.stampsLayerView = stampsLayerView
     }
 
@@ -100,26 +118,26 @@ class ImageEditorView: UIView, StampViewDelegate, UIGestureRecognizerDelegate {
         return intersect
     }
 
-    func getResultImage() throws -> (image: UIImage, path: URL) {
+    func getResultImage() throws -> UIImage {
         UIGraphicsBeginImageContextWithOptions(bounds.size, false, UIScreen.main.scale)
         defer {
             UIGraphicsEndImageContext()
         }
         drawHierarchy(in: bounds, afterScreenUpdates: true)
 
-        guard let image = UIGraphicsGetImageFromCurrentImageContext() else {
+        guard var image = UIGraphicsGetImageFromCurrentImageContext() else {
             throw ImageEditorViewError.noImageGenerated
         }
 
-        guard let data = UIImagePNGRepresentation(image) else {
-            throw ImageEditorViewError.noDataRepresentation
+        if imageView.frame != frame {
+            let cropRect = CGRect(x: imageView.left * image.scale, y: imageView.top * image.scale, width: imageView.width * image.scale, height: imageView.height * image.scale)
+
+            guard let cgImage = image.cgImage, let croppedCgImage = cgImage.cropping(to: cropRect) else { return image }
+
+            image = UIImage(cgImage: croppedCgImage)
         }
 
-        let writePath = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("Image.png")
-
-        try data.write(to: writePath)
-
-        return (image, writePath)
+        return image
     }
 
     func setImage(_ image: UIImage?) {

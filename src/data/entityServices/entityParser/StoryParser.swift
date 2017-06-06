@@ -9,6 +9,13 @@
 import UIKit
 
 class StoryParser: NSObject {
+
+    init(squareMode: Bool = false) {
+        self.squareMode = squareMode
+    }
+
+    private var squareMode: Bool
+
     func parseJsonArray(_ storiesDicts: [[String: Any]]) throws {
         var existedStories = Story.stk_findAll() as? [Story] ?? [Story]()
 
@@ -64,7 +71,7 @@ class StoryParser: NSObject {
                 continue
             }
 
-            existingStoryStamp.chargeWithDict(storyStampDict)
+            existingStoryStamp.chargeWithDict(storyStampDict, squareMode: squareMode)
             existingStoryStamp.story = story
         }
     }
@@ -89,7 +96,7 @@ fileprivate extension Story {
 
 
 fileprivate extension StoryStamp {
-    func chargeWithDict(_ dict: [String: Any]) {
+    func chargeWithDict(_ dict: [String: Any], squareMode: Bool) {
         if let stampId = dict["content_id"] as? Int {
             self.id = Int32(stampId)
         } else {
@@ -134,6 +141,10 @@ fileprivate extension StoryStamp {
         } else {
             self.scale = 1.0
             printErr("stamp scale is invalid; set to 1.0")
+        }
+
+        if squareMode {
+            scale *= 0.6
         }
 
         if let type = dict["type"] as? String {

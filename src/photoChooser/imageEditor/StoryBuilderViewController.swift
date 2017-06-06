@@ -31,7 +31,7 @@ public class StoryBuilderViewController: UIViewController {
     Enables square mode - result image crops to square
     */
 
-    public var isSquaredCroppingEnabled = false
+    public var isSquareMode = false
 
     /**
     Placeholder image. Used in StoryPicker for absent images, or during downloading
@@ -58,6 +58,8 @@ public class StoryBuilderViewController: UIViewController {
             return
         }
 
+        view.layoutIfNeeded()
+
         imageEditor.setImage(image)
 
         DispatchQueue.global().async {
@@ -70,7 +72,7 @@ public class StoryBuilderViewController: UIViewController {
             var cords: [Face]? = nil
 
             do {
-                cords = try ImageDetector.getCords(from: ciImage, for: self.view.bounds)
+                cords = try ImageDetector.getCords(from: ciImage, for: self.imageEditor.imageView.size)
             } catch {
                 printErr("can't scan image", error: error)
             }
@@ -105,6 +107,10 @@ public class StoryBuilderViewController: UIViewController {
 
         stampChooserViewController.delegate = self
         capturePhotoViewController.delegate = self
+
+        stickersService.squareMode = isSquareMode
+        imageEditor.isSquareMode = isSquareMode
+        storyPickerView.isSquareMode = isSquareMode
 
         loadInitialData()
     }
@@ -247,24 +253,10 @@ public class StoryBuilderViewController: UIViewController {
 
     func proceed() {
         do {
-            let image = try imageEditor.getResultImage().image
-
-            if isSquaredCroppingEnabled {
-                cropImage(image)
-            } else {
-                shareImage(image)
-            }
+            shareImage(try imageEditor.getResultImage())
         } catch {
             UIAlertController.show(from: self, for: UIAlertController.UserAlert.lIncorrectImage)
         }
-    }
-
-    private func cropImage(_ image: UIImage) {
-//        let squareCropImageView = SquareCropImageView(image: image)
-//        squareCropImageView.translatesAutoresizingMaskIntoConstraints = false
-//        view.addSubview(squareCropImageView)
-//        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[squareCropImageView]|", metrics: nil, views: ["squareCropImageView": squareCropImageView]))
-//        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[squareCropImageView]|", metrics: nil, views: ["squareCropImageView": squareCropImageView]))
     }
 
     private func shareImage(_ image: UIImage) {

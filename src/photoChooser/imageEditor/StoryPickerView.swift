@@ -43,6 +43,8 @@ class StoryPickerView: UIScrollView {
 
     weak var storyPickerDelegate: StoryPickerViewDelegate?
 
+    var isSquareMode = false
+
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
 

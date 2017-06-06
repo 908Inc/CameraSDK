@@ -49,7 +49,7 @@ class ImageDetector: NSObject {
         return nil
     }
 
-    static func getCords(from image: CIImage, for rect: CGRect) throws -> [Face]? {
+    static func getCords(from image: CIImage, for size: CGSize) throws -> [Face]? {
         guard let detector = detector else {
             throw ImageDetectorError.couldNotCreateDetector
         }
@@ -64,12 +64,12 @@ class ImageDetector: NSObject {
 
         let uiImage = UIImage(ciImage: image)
 
-        let arY: CGFloat = uiImage.size.height / UIScreen.main.bounds.height
+        let arY: CGFloat = uiImage.size.height / size.height
         let arX = arY
+        
+        let difference = (uiImage.size.width / arX - size.width) / 2
 
-        let difference = (uiImage.size.width / arX - UIScreen.main.bounds.width) / 2
-
-        let originalFace = Face(withRect: CGRect.zero)
+        let originalFace = Face(withRect: CGRect())
 
         for feature in features {
             guard let faceFeature = feature as? CIFaceFeature else {
@@ -91,25 +91,25 @@ class ImageDetector: NSObject {
                 let leftPosX = faceFeature.leftEyePosition(forImage: uiImage).x / arX - difference
                 let leftPosY = faceFeature.leftEyePosition(forImage: uiImage).y / arY
 
-                originalFace.leftEye = FaceObject(withRect: CGRect.zero, center: faceFeature.leftEyePosition(forImage: uiImage))
+                originalFace.leftEye = FaceObject(withRect: CGRect(), center: faceFeature.leftEyePosition(forImage: uiImage))
 
-                stkFace.leftEye = FaceObject(withRect: CGRect.zero, center: CGPoint(x: leftPosX, y: leftPosY))
+                stkFace.leftEye = FaceObject(withRect: CGRect(), center: CGPoint(x: leftPosX, y: leftPosY))
             }
 
             if (faceFeature.hasRightEyePosition) {
                 let rightPosX = faceFeature.rightEyePosition(forImage: uiImage).x / arX - difference
                 let rightPosY = faceFeature.rightEyePosition(forImage: uiImage).y / arY
 
-                originalFace.rightEye = FaceObject(withRect: CGRect.zero, center: faceFeature.rightEyePosition(forImage: uiImage))
+                originalFace.rightEye = FaceObject(withRect: CGRect(), center: faceFeature.rightEyePosition(forImage: uiImage))
 
-                stkFace.rightEye = FaceObject(withRect: CGRect.zero, center: CGPoint(x: rightPosX, y: rightPosY))
+                stkFace.rightEye = FaceObject(withRect: CGRect(), center: CGPoint(x: rightPosX, y: rightPosY))
             }
 
             if (faceFeature.hasMouthPosition) {
                 let mouthPosX = faceFeature.mouthPosition(forImage: uiImage).x / arX
                 let mouthPosY = faceFeature.mouthPosition(forImage: uiImage).y / arY
 
-                stkFace.mouth = FaceObject(withRect: CGRect.zero, center: CGPoint(x: mouthPosX, y: mouthPosY))
+                stkFace.mouth = FaceObject(withRect: CGRect(), center: CGPoint(x: mouthPosX, y: mouthPosY))
             }
 
             faces.append(stkFace)

@@ -52,7 +52,9 @@ class Positioner: NSObject {
 
                     let length = lengthEyesMouth - offsetFromMouthToMustache
 
-                    eyesLine.offsetCoordinates(for: length)
+                    if length != 0 {
+                        eyesLine.offsetCoordinates(for: length)
+                    }
 
                     if let offsetNew2 = storyStamp.offset3, let offsetNew1 = storyStamp.offset2 {
                         offset2 = offsetNew2

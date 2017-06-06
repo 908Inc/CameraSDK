@@ -14,6 +14,8 @@ extension NSNotification.Name {
 
 class StoriesEntityService: NSObject {
 
+    var squareMode = false
+
     enum StoriesEntityServiceError: String, Error {
         case noStampsParsed
         case noStampsFetched
@@ -28,7 +30,7 @@ class StoriesEntityService: NSObject {
 
     func updateStories(completion: @escaping ((Error?) -> ())) {
         StoriesWebservices().getStoryDicts { json, error in
-            self.updateCurrentStore(withReceivedJson: json, error: error, usingParser: StoryParser(), completion: completion)
+            self.updateCurrentStore(withReceivedJson: json, error: error, usingParser: StoryParser(squareMode: self.squareMode), completion: completion)
         }
     }
 
