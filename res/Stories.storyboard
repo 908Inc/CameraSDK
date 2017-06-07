@@ -207,6 +207,7 @@
                                 <connections>
                                     <outlet property="collectionView" destination="6DH-hj-dRu" id="c6I-lM-EZN"/>
                                     <outlet property="collectionViewBottomConstraint" destination="N9T-gc-2R6" id="Gb4-dV-bDf"/>
+                                    <outlet property="collectionViewHeightConstraint" destination="tAX-Th-ikF" id="miv-Zf-28a"/>
                                     <outlet property="selectorImageView" destination="xgS-bP-MRm" id="AoQ-Bx-XEd"/>
                                 </connections>
                             </scrollView>

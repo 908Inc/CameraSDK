@@ -40,6 +40,11 @@ class StoryPickerView: UIScrollView {
         }
     }
     @IBOutlet fileprivate weak var collectionViewBottomConstraint: NSLayoutConstraint!
+    @IBOutlet fileprivate weak var collectionViewHeightConstraint: NSLayoutConstraint! {
+        didSet {
+            constraintConstantForPickerShown = collectionViewHeightConstraint.constant
+        }
+    }
 
     weak var storyPickerDelegate: StoryPickerViewDelegate?
 
@@ -61,12 +66,15 @@ class StoryPickerView: UIScrollView {
         delegate = self
     }
 
-    var constantForPickerHidden: CGFloat {
+    var constraintConstantForPickerHidden: CGFloat {
         return 0
     }
 
-    var constantForPickerShown: CGFloat {
-        return collectionView.height
+    // distance from collectionView.top to screen bottom
+    var constraintConstantForPickerShown: CGFloat = 0
+
+    var constraintConstantForPickerShownDefault: CGFloat {
+        return collectionViewHeightConstraint.constant
     }
 
     var imageUrls: [URL?]? {
@@ -74,9 +82,7 @@ class StoryPickerView: UIScrollView {
             // call this to invalidate insets
             layoutIfNeeded()
 
-            let noUrls = (imageUrls?.count ?? 0) == 0
-
-            if noUrls {
+            if (imageUrls?.count ?? 0) == 0 {
                 presentation = .locked
             } else {
                 selectStory(withIdx: 0)
@@ -97,10 +103,10 @@ class StoryPickerView: UIScrollView {
     func changePresentation(_ newPresentation: StoryPickerViewPresentation, animated: Bool = true) {
         layoutIfNeeded()
 
-        if newPresentation == .shown {
-            collectionViewBottomConstraint.constant = constantForPickerShown
+        if newPresentation == .shown || isSquareMode {
+            collectionViewBottomConstraint.constant = constraintConstantForPickerShown
         } else {
-            collectionViewBottomConstraint.constant = constantForPickerHidden
+            collectionViewBottomConstraint.constant = constraintConstantForPickerHidden
         }
 
         if animated {
@@ -139,7 +145,9 @@ class StoryPickerView: UIScrollView {
     }
 
     @IBAction func selectorViewTapped(_ sender: UITapGestureRecognizer) {
-        changePresentation(.hidden)
+        if !isSquareMode {
+            changePresentation(.hidden)
+        }
     }
 
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
@@ -233,10 +241,12 @@ extension StoryPickerView: UIScrollViewDelegate, UICollectionViewDelegate, UICol
 
             collectionView.contentOffset = CGPoint(x: newOffset, y: 0)
         } else {
-            if collectionViewBottomConstraint.constant + contentOffset.y > constantForPickerShown {
-                collectionViewBottomConstraint.constant = constantForPickerShown
-            } else if collectionViewBottomConstraint.constant + contentOffset.y < constantForPickerHidden {
-                collectionViewBottomConstraint.constant = constantForPickerHidden
+            guard !isSquareMode else { return }
+
+            if collectionViewBottomConstraint.constant + contentOffset.y > constraintConstantForPickerShown {
+                collectionViewBottomConstraint.constant = constraintConstantForPickerShown
+            } else if collectionViewBottomConstraint.constant + contentOffset.y < constraintConstantForPickerHidden {
+                collectionViewBottomConstraint.constant = constraintConstantForPickerHidden
             } else {
                 collectionViewBottomConstraint.constant += contentOffset.y
             }

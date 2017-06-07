@@ -112,7 +112,36 @@ public class StoryBuilderViewController: UIViewController {
         imageEditor.isSquareMode = isSquareMode
         storyPickerView.isSquareMode = isSquareMode
 
+        if isSquareMode {
+            addControlsForSquare()
+        }
+
         loadInitialData()
+    }
+
+    public override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        if isSquareMode {
+            storyPickerView.constraintConstantForPickerShown = storyPickerView.constraintConstantForPickerShownDefault + ((imageEditor.distanceFromImageToBottom - storyPickerView.constraintConstantForPickerShownDefault) / 2)
+        }
+    }
+
+    private func addControlsForSquare() {
+        let doneButton = UIButton(type: .custom)
+        doneButton.translatesAutoresizingMaskIntoConstraints = false
+        doneButton.setTitle("Done", for: .normal)
+        doneButton.addTarget(self, action: #selector(StoryBuilderViewController.shareButtonTapped), for: .touchUpInside)
+        view.addSubview(doneButton)
+
+        let cancelButton = UIButton(type: .custom)
+        cancelButton.translatesAutoresizingMaskIntoConstraints = false
+        cancelButton.setTitle("Cancel", for: .normal)
+        cancelButton.addTarget(self, action: #selector(StoryBuilderViewController.resetButtonTapped), for: .touchUpInside)
+        view.addSubview(cancelButton)
+
+        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-20-[cancelButton]", metrics: nil, views: ["cancelButton": cancelButton]))
+        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-20-[cancelButton]-(>=0)-[doneButton]-20-|", options: [.alignAllCenterY], metrics: nil, views: ["cancelButton": cancelButton, "doneButton": doneButton]))
     }
 
 
@@ -248,12 +277,10 @@ public class StoryBuilderViewController: UIViewController {
     }
 
     @IBAction private func shareButtonTapped() {
-        proceed()
-    }
-
-    func proceed() {
         do {
-            shareImage(try imageEditor.getResultImage())
+            let resultImage = try imageEditor.getResultImage()
+
+            shareImage(resultImage)
         } catch {
             UIAlertController.show(from: self, for: UIAlertController.UserAlert.lIncorrectImage)
         }
@@ -483,7 +510,7 @@ extension StoryBuilderViewController: StoryPickerViewDelegate {
     }
 
     private func setUpInterface(for presentation: StoryPickerViewPresentation) {
-        let buttonsHiddenYPosition = storyPickerView.constantForPickerShown - buttonsShownYPosition
+        let buttonsHiddenYPosition = storyPickerView.constraintConstantForPickerShown - buttonsShownYPosition
 
         view.layoutIfNeeded()
 

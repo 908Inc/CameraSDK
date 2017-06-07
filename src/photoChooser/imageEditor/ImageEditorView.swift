@@ -73,6 +73,7 @@ class ImageEditorView: UIView, StampViewDelegate, UIGestureRecognizerDelegate {
         addConstraint(NSLayoutConstraint(item: imageView, attribute: .centerX, relatedBy: .equal, toItem: stampsLayerView, attribute: .centerX, multiplier: 1, constant: 0))
         addConstraint(NSLayoutConstraint(item: imageView, attribute: .width, relatedBy: .equal, toItem: stampsLayerView, attribute: .width, multiplier: 1, constant: 0))
         addConstraint(NSLayoutConstraint(item: imageView, attribute: .height, relatedBy: .equal, toItem: stampsLayerView, attribute: .height, multiplier: 1, constant: 0))
+        stampsLayerView.clipsToBounds = true
         self.stampsLayerView = stampsLayerView
     }
 
@@ -240,5 +241,13 @@ extension ImageEditorView {
         } else {
             printErr("no filtered image")
         }
+    }
+}
+
+
+// cords
+extension ImageEditorView {
+    var distanceFromImageToBottom: CGFloat {
+        return height - imageView.bottom
     }
 }

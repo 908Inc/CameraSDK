@@ -50,7 +50,7 @@ class Positioner: NSObject {
 
                     let offsetFromMouthToMustache = 0.25 * lengthEyesMouth
 
-                    let length = lengthEyesMouth - offsetFromMouthToMustache
+                    let length = lengthEyesMouth// - offsetFromMouthToMustache
 
                     if length != 0 {
                         eyesLine.offsetCoordinates(for: length)
