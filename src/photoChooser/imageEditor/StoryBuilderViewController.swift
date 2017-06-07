@@ -302,7 +302,7 @@ public class StoryBuilderViewController: UIViewController {
 
     fileprivate class AnimatedStory {
         let story: Story
-        var shown = false
+        var shown = true
 
         init(story: Story) {
             self.story = story

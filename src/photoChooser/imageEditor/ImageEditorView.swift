@@ -43,9 +43,9 @@ class ImageEditorView: UIView, StampViewDelegate, UIGestureRecognizerDelegate {
     private func customInit() {
         backgroundColor = UIColor.clear
         
-        let imageView = UIImageView.layoutInst() as UIImageView
-
+        let imageView = UIImageView.layoutInst()
         imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
         addSubview(imageView)
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[imageView]|", metrics: nil, views: ["imageView": imageView]))
         addConstraint(NSLayoutConstraint(item: self, attribute: .centerY, relatedBy: .equal, toItem: imageView, attribute: .centerY, multiplier: 1, constant: 0))

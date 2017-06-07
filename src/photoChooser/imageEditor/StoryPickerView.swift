@@ -191,6 +191,10 @@ extension StoryPickerView: UIScrollViewDelegate, UICollectionViewDelegate, UICol
         }
     }
 
+    public func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+//        print("target\(targetContentOffset.pointee)")
+    }
+
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard scrollView == self else {
             return
@@ -269,12 +273,14 @@ extension StoryPickerView: UIScrollViewDelegate, UICollectionViewDelegate, UICol
         if !decelerate {
             invalidatePickerPresentation()
             selectClosestCell()
+//            print("end\(scrollView.contentOffset)")
         }
     }
 
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         invalidatePickerPresentation()
         selectClosestCell()
+//        print("end\(scrollView.contentOffset)")
     }
 
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -317,6 +323,8 @@ extension StoryPickerView: UIScrollViewDelegate, UICollectionViewDelegate, UICol
             return
         }
 
+//        print(indexPath.row)
+
         scrollAndChangeSelectionIfNeeded(to: indexPath)
     }
 
@@ -342,6 +350,8 @@ extension StoryPickerView: UIScrollViewDelegate, UICollectionViewDelegate, UICol
     }
 
     private func closestCell() -> UICollectionViewCell? {
+        guard let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else { return nil }
+
         let visibleCells = collectionView.visibleCells
 
         // distance between at least one cell and selector always smaller, then self.width
@@ -364,6 +374,13 @@ extension StoryPickerView: UIScrollViewDelegate, UICollectionViewDelegate, UICol
                 closestCell = cell
             }
         }
+
+
+//        let widthOfCell = layout.itemSize.width
+//
+//        let offsetToCenterCell = collectionView.contentOffset.x + width / 2
+
+//        print(offsetToCenterCell / widthOfCell)
 
         return closestCell
     }
