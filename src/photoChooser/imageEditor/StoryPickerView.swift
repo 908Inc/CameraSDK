@@ -151,16 +151,22 @@ class StoryPickerView: UIScrollView {
     }
 
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        // only need this procession for cases, when picker is hidden
-        guard presentation == .hidden else {
-            return super.point(inside: point, with: event)
-        }
-
         guard let storyPickerDelegate = storyPickerDelegate else {
             return super.point(inside: point, with: event)
         }
 
-        return super.point(inside: point, with: event) && storyPickerDelegate.shouldReceiveTouch(for: point)
+        if isSquareMode {
+            _ = storyPickerDelegate.shouldReceiveTouch(for: point)
+
+            return collectionView.frame.contains(point)
+        } else {
+            // only need this procession for cases, when picker is hidden
+            guard presentation == .hidden else {
+                return super.point(inside: point, with: event)
+            }
+
+            return super.point(inside: point, with: event) && storyPickerDelegate.shouldReceiveTouch(for: point)
+        }
     }
 
     override func layoutSubviews() {
