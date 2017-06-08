@@ -21,10 +21,6 @@ class Positioner: NSObject {
 
         if let stampType = storyStamp.storyStampType {
             switch stampType {
-            case .hat:
-                let approxForeheadHeight = 0.4 * face.rect.height
-
-                eyesLine.offsetCoordinates(for: -approxForeheadHeight)
             case .frame:
                 if let position = storyStamp.storyStampPosition {
                     stampView.width = view.width
@@ -48,12 +44,8 @@ class Positioner: NSObject {
                     let eyeCenter = eyesLine.center
                     let lengthEyesMouth = Line(start: eyeCenter, end: mouthCenter).length
 
-                    let offsetFromMouthToMustache = 0.25 * lengthEyesMouth
-
-                    let length = lengthEyesMouth// - offsetFromMouthToMustache
-
-                    if length != 0 {
-                        eyesLine.offsetCoordinates(for: length)
+                    if lengthEyesMouth != 0 {
+                        eyesLine.offsetCoordinates(for: lengthEyesMouth)
                     }
 
                     if let offsetNew2 = storyStamp.offset3, let offsetNew1 = storyStamp.offset2 {
@@ -137,7 +129,6 @@ fileprivate extension StoryStamp {
         case `static` = "static"
         case mouth = "mouth"
         case frame = "frame"
-        case hat = "hat"
     }
 
     var storyStampType: StoryStampType? {

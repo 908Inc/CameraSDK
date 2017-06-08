@@ -28,6 +28,11 @@ public class StoryBuilderViewController: UIViewController {
     public weak var delegate: StoryBuilderViewControllerDelegate?
 
     /**
+    Add default filter after photo captured
+    */
+    public var addDefaultFilter = false
+
+    /**
     Enables square mode - result image crops to square
     */
 
@@ -93,7 +98,9 @@ public class StoryBuilderViewController: UIViewController {
                 } else {
                     UIAlertController.show(from: self, for: UIAlertController.UserAlert.lNoFaceFound)
 
-                    self.storyPickerView.changePresentation(.locked, animated: true)
+                    if !self.isSquareMode {
+                        self.storyPickerView.changePresentation(.locked, animated: true)
+                    }
                 }
             }
         }
@@ -108,6 +115,7 @@ public class StoryBuilderViewController: UIViewController {
         stampChooserViewController.delegate = self
         capturePhotoViewController.delegate = self
 
+        capturePhotoViewController.isSquareMode = isSquareMode
         stickersService.squareMode = isSquareMode
         imageEditor.isSquareMode = isSquareMode
         storyPickerView.isSquareMode = isSquareMode
@@ -419,7 +427,9 @@ extension StoryBuilderViewController: CapturePhotoViewControllerDelegate {
 
         setUp(for: photo)
 
-        imageEditor.changeFilter()
+        if addDefaultFilter {
+            imageEditor.changeFilter()
+        }
     }
 }
 

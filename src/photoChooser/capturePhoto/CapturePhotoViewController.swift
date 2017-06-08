@@ -18,6 +18,8 @@ class CapturePhotoViewController: UIViewController {
     @IBOutlet var imagePicker: UIImagePickerController!
     weak var delegate: CapturePhotoViewControllerDelegate?
 
+    var isSquareMode = false
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -29,6 +31,8 @@ class CapturePhotoViewController: UIViewController {
             previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
             cameraLayer = previewLayer
         }
+
+        imagePicker.allowsEditing = isSquareMode
     }
 
     open override func viewWillAppear(_ animated: Bool) {
@@ -44,7 +48,11 @@ class CapturePhotoViewController: UIViewController {
     }
 
     override func viewDidLayoutSubviews() {
-        cameraLayer?.frame = view.bounds
+        if isSquareMode {
+            cameraLayer?.frame = CGRect(x: 0, y: view.centerY - view.width / 2, width: view.width, height: view.width)
+        } else {
+            cameraLayer?.frame = view.bounds
+        }
     }
 
     @IBAction func showPhotoPickerTapped(_ sender: UIButton) {
@@ -59,12 +67,26 @@ class CapturePhotoViewController: UIViewController {
         }
 
         capturePhotoHelper.capturePhotoAsynchronously { capturedPhoto, error in
-            guard error == nil, let capturedPhoto = capturedPhoto else {
+            guard error == nil, var capturedPhoto = capturedPhoto else {
                 printErr("can't make photo", error: error)
 
                 UIAlertController.show(from: self, for: UIAlertController.UserAlert.lCantMakePhoto)
 
                 return
+            }
+
+            if self.isSquareMode {
+                let rect = CGRect(x: (capturedPhoto.size.height - capturedPhoto.size.width) / 2, y: 0, width: capturedPhoto.size.width, height: capturedPhoto.size.width)
+
+                guard let cgImage = capturedPhoto.cgImage,
+                      let croppedCgImage = cgImage.cropping(to: rect)
+                        else {
+                    UIAlertController.show(from: self, for: UIAlertController.UserAlert.lCantMakePhoto)
+
+                    return
+                }
+
+                capturedPhoto = UIImage(cgImage: croppedCgImage, scale: capturedPhoto.scale, orientation: capturedPhoto.imageOrientation)
             }
 
             DispatchQueue.main.async {
@@ -94,14 +116,14 @@ extension CapturePhotoViewController: UIImagePickerControllerDelegate, UINavigat
             return
         }
 
-        guard let chosenImage = info[UIImagePickerControllerOriginalImage] as? UIImage else {
-            UIAlertController.show(from: self, for: UIAlertController.UserAlert.lBrokenImage, logMessage: "unexpected behavior; selected image isn't UIImage")
+        guard let chosenImage = info[UIImagePickerControllerEditedImage] as? UIImage else {
+            UIAlertController.show(from: picker, for: UIAlertController.UserAlert.lBrokenImage, logMessage: "unexpected behavior; selected image isn't UIImage")
 
             return
         }
 
         guard let resultPhoto = chosenImage.fixOrientation() else {
-            UIAlertController.show(from: self, for: UIAlertController.UserAlert.lBrokenImage, logMessage: "can't access photo after fixing orientation")
+            UIAlertController.show(from: picker, for: UIAlertController.UserAlert.lBrokenImage, logMessage: "can't access photo after fixing orientation")
 
             return
         }
