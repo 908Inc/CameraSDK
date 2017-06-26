@@ -31,17 +31,8 @@ class CoreDataManager: NSObject {
 
         persistentStore = try! persistentStoreCoordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: storeURL, options: options)
 
-        let backgroundQueueContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-        backgroundQueueContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-
         let mainQueueContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-
-        let analyticsBackgroundContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-
-        backgroundQueueContext.persistentStoreCoordinator = persistentStoreCoordinator
         mainQueueContext.persistentStoreCoordinator = persistentStoreCoordinator
-        analyticsBackgroundContext.persistentStoreCoordinator = persistentStoreCoordinator
-
         mainContext = mainQueueContext
 
         super.init()

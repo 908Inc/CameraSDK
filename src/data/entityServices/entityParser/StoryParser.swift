@@ -71,7 +71,7 @@ class StoryParser: NSObject {
                 continue
             }
 
-            existingStoryStamp.chargeWithDict(storyStampDict, squareMode: squareMode)
+            existingStoryStamp.chargeWithDictVer2(storyStampDict, squareMode: squareMode)
             existingStoryStamp.story = story
         }
     }
@@ -141,6 +141,69 @@ fileprivate extension StoryStamp {
         } else {
             self.scale = 1.0
             printErr("stamp scale is invalid; set to 1.0")
+        }
+
+        if squareMode {
+            scale *= 0.6
+        }
+
+        if let type = dict["type"] as? String {
+            self.type = type
+        } else {
+            printErr("stamp type is invalid")
+        }
+    }
+
+    func chargeWithDictVer2(_ dict: [String: Any], squareMode: Bool) {
+        if let stampId = dict["content_id"] as? Int {
+            self.id = Int32(stampId)
+        } else {
+            printErr("no stampId provided", logToServer: true)
+        }
+
+        if let imageUrl = (dict["image"] as? [String: Any])?[Utility.scaleString] as? String {
+            self.imageUrl = imageUrl
+        } else {
+            printErr("no image provided")
+        }
+
+        if let orderNumber = dict["order"] as? Int {
+            self.orderNumber = Int16(orderNumber)
+        } else {
+            printErr("stamp order is invalid")
+        }
+
+        if let pointDicts = dict["points"] as? [[String: Any]] {
+            let stampPositionPointsContainer = StampPositionPointsContainer(dicts: pointDicts)
+
+            pointsContainer = stampPositionPointsContainer
+        } else {
+            printErr("stamp points are invalid")
+        }
+
+        if let position = dict["position"] as? String {
+            self.position = position
+        } else {
+//            printErr("stamp position is invalid")
+        }
+
+        if let rotation = dict["delta_rotation"] as? Float {
+            self.rotation = rotation
+        } else {
+            self.rotation = 0.0
+        }
+
+        if let scale = dict["delta_scale"] as? Float {
+            self.scale = scale
+        } else {
+            self.scale = 1.0
+        }
+
+        if let deltaOffset = dict["delta_offset"] as? [String: Any] {
+            offsetX = deltaOffset["x"] as? Float ?? 0
+            offsetY = deltaOffset["y"] as? Float ?? 0
+        } else {
+            self.scale = 1.0
         }
 
         if squareMode {
