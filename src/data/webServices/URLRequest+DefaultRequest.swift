@@ -13,7 +13,7 @@ fileprivate let platform = "iOS"
 fileprivate let baseUrl: URL = {
 //    let work = false
     let apiVersion = "v2"
-    let rootUrlString = /*"http://work.stk.908.vc"// : */"https://api.stickerpipe.com"
+    let rootUrlString = "http://work.stk.908.vc"// : "https://api.stickerpipe.com"
 
     return URL(string: "\(rootUrlString)/api/\(apiVersion)")!
 }()
