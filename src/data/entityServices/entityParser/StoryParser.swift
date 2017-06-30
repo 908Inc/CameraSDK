@@ -199,6 +199,16 @@ fileprivate extension StoryStamp {
             self.scale = 1.0
         }
 
+
+        // FIXME: castuls
+        if let rotationString = dict["delta_rotation"] as? String, let rotation = Float(rotationString) {
+            self.rotation = rotation
+        }
+
+        if let scaleString = dict["delta_scale"] as? String, let scale = Float(scaleString) {
+            self.scale = scale
+        }
+
         if let deltaOffset = dict["delta_offset"] as? [String: Any] {
             offsetX = deltaOffset["x"] as? Float ?? 0
             offsetY = deltaOffset["y"] as? Float ?? 0
