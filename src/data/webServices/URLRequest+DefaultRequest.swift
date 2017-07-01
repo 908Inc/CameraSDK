@@ -9,11 +9,11 @@
 import Foundation
 
 fileprivate let platform = "iOS"
+fileprivate let work = true
 
 fileprivate let baseUrl: URL = {
-//    let work = false
     let apiVersion = "v2"
-    let rootUrlString = "http://work.stk.908.vc"// : "https://api.stickerpipe.com"
+    let rootUrlString = work ? "http://work.stk.908.vc" : "https://api.stickerpipe.com"
 
     return URL(string: "\(rootUrlString)/api/\(apiVersion)")!
 }()
@@ -38,6 +38,9 @@ public extension URLRequest {
         request.setValue(Bundle.main.bundleIdentifier, forHTTPHeaderField: "Package")
         request.setValue(Locale.preferredLanguages.first, forHTTPHeaderField: "Localization")
         request.setValue(Utility.scaleString, forHTTPHeaderField: "Density")
+        if work {
+            request.setValue("1", forHTTPHeaderField: "X-BYPASS-CACHE")
+        }
 
         return request
     }

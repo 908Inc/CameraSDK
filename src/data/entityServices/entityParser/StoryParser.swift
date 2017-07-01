@@ -212,8 +212,6 @@ fileprivate extension StoryStamp {
         if let deltaOffset = dict["delta_offset"] as? [String: Any] {
             offsetX = deltaOffset["x"] as? Float ?? 0
             offsetY = deltaOffset["y"] as? Float ?? 0
-        } else {
-            self.scale = 1.0
         }
 
         if squareMode {
