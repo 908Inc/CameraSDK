@@ -15,7 +15,6 @@ class StoriesWebservices: Webservice {
     }
 
     func getStoryDicts(responseHandler: @escaping ([String: AnyHashable]?, Error?) -> ()) {
-        //        https://api.stickerpipe.com/api/v2/new_stories
         getRawDicts(fromPath: "new_stories", responseHandler: responseHandler)
     }
 

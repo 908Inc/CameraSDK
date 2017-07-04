@@ -9,7 +9,7 @@
 import Foundation
 
 fileprivate let platform = "iOS"
-fileprivate let work = true
+fileprivate let work = false
 
 fileprivate let baseUrl: URL = {
     let apiVersion = "v2"
