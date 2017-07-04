@@ -106,7 +106,7 @@ class ImageDetector: NSObject {
             }
 
             if (faceFeature.hasMouthPosition) {
-                let mouthPosX = faceFeature.mouthPosition(forImage: uiImage).x / arX
+                let mouthPosX = faceFeature.mouthPosition(forImage: uiImage).x / arX - difference
                 let mouthPosY = faceFeature.mouthPosition(forImage: uiImage).y / arY
 
                 stkFace.mouth = FaceObject(withRect: CGRect(), center: CGPoint(x: mouthPosX, y: mouthPosY))
