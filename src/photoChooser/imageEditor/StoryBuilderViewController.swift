@@ -200,7 +200,7 @@ public class StoryBuilderViewController: UIViewController {
             activityIndicator = view.showActivityIndicator()
         }
 
-        stickersService.updateStories { error in
+        stickersService.updateStories { error, hasChanges in
             DispatchQueue.main.async {
                 defer { activityIndicator?.hide(animated: true) }
 
@@ -217,14 +217,14 @@ public class StoryBuilderViewController: UIViewController {
                     return
                 }
 
-                if self.animatedStories?.count ?? 0 == 0 {
+                if self.animatedStories?.count ?? 0 == 0 || hasChanges {
                     self.loadCachedStories()
                 }
             }
         }
 
         if isStampsEnabled {
-            stickersService.updateStamps { error in
+            stickersService.updateStamps { error, hasChanges in
                 guard error == nil else {
                     switch (error! as NSError).code {
                     case NSURLErrorNotConnectedToInternet:()

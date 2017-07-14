@@ -16,7 +16,7 @@ class StoryParser: NSObject {
 
     private var squareMode: Bool
 
-    func parseJsonArray(_ storiesDicts: [[String: Any]]) throws {
+    func parseJsonArray(_ storiesDicts: [[String: Any]]) throws -> Bool {
         var existedStories = Story.stk_findAll() as? [Story] ?? [Story]()
 
         for (idx, storyDict) in storiesDicts.enumerated() {
@@ -26,24 +26,24 @@ class StoryParser: NSObject {
                 continue
             }
 
-            let existingStory: Story
+            let existedStory: Story
 
             if let oldStory = (existedStories.first { $0.id == Int32(storyId) }) {
                 existedStories.remove(oldStory)
 
-                existingStory = oldStory
+                existedStory = oldStory
             } else {
-                existingStory = Story.stk_object(withUniqueAttribute: "id", value: NSNumber(value: storyId))
+                existedStory = Story.stk_object(withUniqueAttribute: "id", value: NSNumber(value: storyId))
             }
 
 
             // update data hash is the same; no need to update
-            if existingStory.dataHash == storyDict["data_hash"] as? String {
+            if existedStory.dataHash == storyDict["data_hash"] as? String {
                 continue
             }
 
-            existingStory.chargeWithDict(storyDict)
-            existingStory.orderNumber = Int16(idx)
+            existedStory.chargeWithDict(storyDict)
+            existedStory.orderNumber = Int16(idx)
 
             guard let storyStampDicts = storyDict["content"] as? [[String: Any]] else {
                 printErr("stamp pack is empty", logToServer: true)
@@ -51,12 +51,18 @@ class StoryParser: NSObject {
                 continue
             }
 
-            updateStoryStampsFromDicts(storyStampDicts, for: existingStory)
+            updateStoryStampsFromDicts(storyStampDicts, for: existedStory)
         }
 
         SessionManager.shared.coreDataManager.removeObjects(existedStories)
 
-        try SessionManager.shared.coreDataManager.saveIfNeeded()
+        let hasChanges = SessionManager.shared.coreDataManager.mainContext.hasChanges
+
+        if hasChanges {
+            try SessionManager.shared.coreDataManager.mainContext.save()
+        }
+
+        return hasChanges
     }
 
     func updateStoryStampsFromDicts(_ storyStampDicts: [[String: Any]], for story: Story) {
