@@ -49,6 +49,14 @@ func shareImage(_ image: UIImage) {
     storyBuilder.present(UIActivityViewController(activityItems: [image], applicationActivities: nil), animated: true)
 }
 ```
+### Add your Stickerpipe ApiKey
+
+Add separate plist file named 'Stories.plist' to your project with your Stickerpipe ApiKey
+```xml
+    <key>StoriesAPIKey</key>
+	<string>f14ed8ef0f7cd28055872a0b6f8bfb61</string>
+```
+To obtain your ApiKey visit http://stickerpipe.com/
 
 # API
 
