@@ -15,20 +15,30 @@ class Positioner: NSObject {
 
             return
         }
-        var eyesLine = Line(start: rightEyeCenter, end: leftEyeCenter)
 
-        var offset1 = storyStamp.offset1, offset2 = storyStamp.offset2
+        var stampLine = Line(start: CGPoint(), end: CGPoint())
+        var eyesLine = Line(start: rightEyeCenter, end: leftEyeCenter)
 
         if let stampType = storyStamp.storyStampType {
             switch stampType {
+            case .eyes:
+                stampLine = Line(start: CGPoint(x: 40, y: 80), end: CGPoint(x: 120, y: 80))
+            case .mouth:()
+                if let mouthCenter = face.mouth?.center {
+                    stampLine = Line(start: CGPoint(x: 0, y: 80), end: CGPoint(x: 160, y: 80))
+
+                    let lengthEyesMouth = Line(start: eyesLine.center, end: mouthCenter).length
+
+                    if lengthEyesMouth != 0 {
+                        eyesLine.offsetCoordinates(for: lengthEyesMouth)
+                    }
+                }
             case .frame:
                 if let position = storyStamp.storyStampPosition {
                     stampView.width = view.width
                     stampView.height = view.width
 
-                    guard let vPos = position.vPos else {
-                        break
-                    }
+                    guard let vPos = position.vPos else { break }
 
                     switch vPos {
                     case .top:
@@ -39,20 +49,7 @@ class Positioner: NSObject {
                         stampView.bottom = view.height
                     }
                 }
-            case .mouth:
-                if let mouthCenter = face.mouth?.center {
-                    let eyeCenter = eyesLine.center
-                    let lengthEyesMouth = Line(start: eyeCenter, end: mouthCenter).length
-
-                    if lengthEyesMouth != 0 {
-                        eyesLine.offsetCoordinates(for: lengthEyesMouth)
-                    }
-
-                    if let offsetNew2 = storyStamp.offset3, let offsetNew1 = storyStamp.offset2 {
-                        offset2 = offsetNew2
-                        offset1 = offsetNew1
-                    }
-                }
+            return
             case .static:
                 if let position = storyStamp.storyStampPosition {
                     var startPosition = CGPoint.zero
@@ -69,55 +66,47 @@ class Positioner: NSObject {
                         startPosition.y = view.height
                     }
 
-                    let scale = CGFloat(storyStamp.scale)
+                    let offset = storyStamp.offset1 ?? CGPoint()
 
-                    guard let offset1 = offset1 else {
-                        return
-                    }
+                    stampView.origin = startPosition - offset
 
-                    startPosition -= (offset1 * scale)
-
-                    stampView.center = startPosition + (stampView.height / 2 * scale)
-
-                    stampView.transform = stampView.transform.scaledBy(x: scale, y: scale)
-
-                    stampView.setAnchorPoint(offset1 / 160)
-
-                    let rotationAngle = CGFloat(storyStamp.rotation)
-                    stampView.transform = stampView.transform.rotated(by: -((rotationAngle * CGFloat.pi) / 180.0))
-
-                    stampView.setAnchorPoint(CGPoint(x: 0.5, y: 0.5))
+                    stampView.transform = stampView.transform.scaledBy(x: CGFloat(storyStamp.scale), y: CGFloat(storyStamp.scale))
+                    stampView.transform = stampView.transform.rotated(by: storyStamp.radiansRotation)
                 }
-            default: ()
-            }
-        }
-
-        if let offset1 = offset1, let offset2 = offset2 {
-            let stampSize = stampView.width
-
-            guard stampSize > 0 else {
-                printErr("stampView width is 0; unexpected")
 
                 return
             }
-
-            let stampLine = Line(start: offset1, end: offset2)
-
-            let scale = stampLine.scaleFrom(line: eyesLine)
-            let rotationAngle = stampLine.angleTo(line: eyesLine)
-
-            let stampCenter = stampLine.center
-            let offset = CGPoint(x: stampSize / 2 - stampCenter.x, y: stampSize / 2 - stampCenter.y)
-
-            stampView.center = eyesLine.center + offset * scale
-
-            stampView.transform = stampView.transform.scaledBy(x: scale, y: scale)
-
-            stampView.setAnchorPoint(stampCenter / stampSize)
-            stampView.transform = stampView.transform.rotated(by: rotationAngle)
-
-            stampView.setAnchorPoint(CGPoint(x: 0.5, y: 0.5))
         }
+
+
+        let stampSize = stampView.width
+        let stampCenter = stampLine.center
+        let wholeOffset = CGPoint(x: stampSize / 2 - stampCenter.x, y: stampSize / 2 - stampCenter.y)
+
+        stampView.center = eyesLine.center - wholeOffset
+
+        let scale = stampLine.scaleFrom(line: eyesLine)
+        let rotationAngle = stampLine.angleTo(line: eyesLine)
+
+        stampView.transform = stampView.transform.scaledBy(x: scale, y: scale)
+        stampView.transform = stampView.transform.rotated(by: rotationAngle)
+
+        stampView.transform = stampView.transform.scaledBy(x: CGFloat(storyStamp.scale), y: CGFloat(storyStamp.scale))
+        stampView.transform = stampView.transform.rotated(by: storyStamp.radiansRotation)
+
+        var offset = storyStamp.offset * scale
+        offset.rotate(byAngle: -rotationAngle)
+        stampView.center = stampView.center + offset
+    }
+}
+
+
+fileprivate extension CGPoint {
+    mutating func rotate(byAngle angle: CGFloat) {
+        let rotatedDeltaY = y * cos(angle) - x * sin(angle)
+        let rotatedDeltaX = y * sin(angle) + x * cos(angle)
+
+        self = CGPoint(x: rotatedDeltaX, y: rotatedDeltaY)
     }
 }
 
@@ -133,6 +122,20 @@ fileprivate extension StoryStamp {
 
     var storyStampType: StoryStampType? {
         return StoryStampType(rawValue: type ?? "")
+    }
+}
+
+
+fileprivate extension StoryStamp {
+    var offset: CGPoint {
+        return CGPoint(x: CGFloat(offsetX), y: CGFloat(offsetY))
+    }
+}
+
+
+fileprivate extension StoryStamp {
+    var radiansRotation: CGFloat {
+        return -CGFloat((CGFloat(rotation) * CGFloat.pi) / 180.0)
     }
 }
 

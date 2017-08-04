@@ -25,5 +25,7 @@ extension StoryStamp {
     @NSManaged public var scale: Float
     @NSManaged public var type: String?
     @NSManaged public var story: Story?
+    @NSManaged public var offsetX: Float
+    @NSManaged public var offsetY: Float
 
 }

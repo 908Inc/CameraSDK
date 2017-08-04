@@ -9,8 +9,8 @@
 import UIKit
 
 struct Line {
-    var start: CGPoint
-    var end: CGPoint
+    var start: CGPoint = CGPoint()
+    var end: CGPoint = CGPoint()
 
     var center: CGPoint {
         return CGPoint(x: (start.x + end.x) / 2, y: (start.y + end.y) / 2)

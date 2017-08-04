@@ -22,43 +22,43 @@ class StoriesEntityService: NSObject {
         case incompleteData = "Received json doesn't contain essential value"
     }
 
-    func updateStamps(completion: @escaping ((Error?) -> ())) {
+    func updateStamps(completion: @escaping ((Error?, Bool) -> ())) {
         StoriesWebservices().getStampDicts { json, error in
             self.updateCurrentStore(withReceivedJson: json, error: error, usingParser: StampPackParser(), completion: completion)
         }
     }
 
-    func updateStories(completion: @escaping ((Error?) -> ())) {
+    func updateStories(completion: @escaping ((Error?, Bool) -> ())) {
         StoriesWebservices().getStoryDicts { json, error in
             self.updateCurrentStore(withReceivedJson: json, error: error, usingParser: StoryParser(squareMode: self.squareMode), completion: completion)
         }
     }
 
-    private func updateCurrentStore(withReceivedJson json: [String: AnyHashable]?, error: Error?, usingParser parser: Parser, completion: @escaping ((Error?) -> ())) {
+    private func updateCurrentStore(withReceivedJson json: [String: AnyHashable]?, error: Error?, usingParser parser: Parser, completion: @escaping ((Error?, Bool) -> ())) {
         guard error == nil else {
-            completion(error)
+            completion(error, false)
 
             return
         }
         guard let json = json else {
             printErr("unexpected condition; json is nil, error is nil", logToServer: true)
 
-            completion(nil)
+            completion(nil, false)
 
             return
         }
         guard let dataArray = json["data"] as? [[String: Any]], dataArray.count > 0 else {
-            completion(StoriesEntityServiceError.incompleteData)
+            completion(StoriesEntityServiceError.incompleteData, false)
 
             return
         }
 
         SessionManager.shared.coreDataManager.mainContext.perform {
             do {
-                try parser.parseJsonArray(dataArray)
-                completion(nil)
+                let hasChanges = try parser.parseJsonArray(dataArray)
+                completion(nil, hasChanges)
             } catch {
-                completion(error)
+                completion(error, false)
             }
         }
     }
@@ -66,7 +66,7 @@ class StoriesEntityService: NSObject {
 
 
 protocol Parser {
-    func parseJsonArray(_ stampPackDicts: [[String: Any]]) throws
+    func parseJsonArray(_ stampPackDicts: [[String: Any]]) throws -> Bool
 }
 
 extension StampPackParser: Parser {}

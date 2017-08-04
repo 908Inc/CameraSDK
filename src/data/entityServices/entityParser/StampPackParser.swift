@@ -9,7 +9,7 @@
 import UIKit
 
 class StampPackParser: NSObject {
-    func parseJsonArray(_ stampPackDicts: [[String: Any]]) throws {
+    func parseJsonArray(_ stampPackDicts: [[String: Any]]) throws -> Bool {
         var existedPacks = StampPack.stk_findAll() as? [StampPack] ?? [StampPack]()
 
         for (idx, stampPackDict) in stampPackDicts.enumerated() {
@@ -47,7 +47,13 @@ class StampPackParser: NSObject {
 
         SessionManager.shared.coreDataManager.removeObjects(existedPacks)
 
-        try SessionManager.shared.coreDataManager.saveIfNeeded()
+        let hasChanges = SessionManager.shared.coreDataManager.mainContext.hasChanges
+
+        if hasChanges {
+            try SessionManager.shared.coreDataManager.mainContext.save()
+        }
+
+        return hasChanges
     }
 
     func updateStampsFromDicts(_ stampDicts: [[String: Any]], for pack: StampPack) {
