@@ -53,7 +53,7 @@ func shareImage(_ image: UIImage) {
 
 Add separate plist file named 'Stories.plist' to your project with your Stickerpipe ApiKey
 ```xml
-    <key>StoriesAPIKey</key>
+<key>StoriesAPIKey</key>
 <string>YOUR-API-KEY</string>
 ```
 To obtain your ApiKey visit http://stickerpipe.com/
