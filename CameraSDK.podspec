@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "CameraSDK"
-  s.version      = "0.0.3"
+  s.version      = "0.0.4"
   s.summary      = "An easy to use lib for integrating Stories into your app"
 
   s.description  = <<-DESC

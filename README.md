@@ -12,7 +12,7 @@ The most convenient way to use it - include via cocoapods.
 
 ```ruby
 use_frameworks!
-pod "CameraSDK", "~> 0.0.2"
+pod "CameraSDK"
 ```
 
 Run pod install - that's it. You all set up
