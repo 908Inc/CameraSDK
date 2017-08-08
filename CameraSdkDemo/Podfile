@@ -1,0 +1,7 @@
+platform :ios, "8.0"
+
+target 'CameraSdkDemo' do
+  inhibit_all_warnings!
+  use_frameworks!
+  pod 'CameraSDK’
+end

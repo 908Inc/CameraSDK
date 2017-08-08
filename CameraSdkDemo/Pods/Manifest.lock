@@ -1,0 +1,26 @@
+PODS:
+  - CameraSDK (0.0.3):
+    - MBProgressHUD
+    - MD5Digest
+    - SAMKeychain
+    - SDWebImage
+  - MBProgressHUD (1.0.0)
+  - MD5Digest (1.1.0)
+  - SAMKeychain (1.5.2)
+  - SDWebImage (4.1.0):
+    - SDWebImage/Core (= 4.1.0)
+  - SDWebImage/Core (4.1.0)
+
+DEPENDENCIES:
+  - CameraSDK
+
+SPEC CHECKSUMS:
+  CameraSDK: 11ab3c784d669d4ce4a9365262f81ea94dfa01cf
+  MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
+  MD5Digest: fea371215507cfcdc3c9633d02cffc7fd075ebc3
+  SAMKeychain: 1865333198217411f35327e8da61b43de79b635b
+  SDWebImage: 0e435c14e402a6730315a0fb79f95e68654d55a4
+
+PODFILE CHECKSUM: 2c78c6b621aea1f0193a61bfeec32a5a09bb96f9
+
+COCOAPODS: 1.3.1
