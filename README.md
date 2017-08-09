@@ -34,6 +34,11 @@ Then present it whereever you want:
 ```swift
 myContainerViewController.present(storyBuilder, animated: true)
 ```
+and show camera
+
+```swift
+viewController.showCamera(true)
+```
 
 ### 2 Took the result photo
 
