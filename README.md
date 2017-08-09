@@ -37,7 +37,7 @@ myContainerViewController.present(storyBuilder, animated: true)
 and show camera
 
 ```swift
-viewController.showCamera(true)
+storyBuilder.showCamera(true)
 ```
 
 ### 2 Took the result photo
